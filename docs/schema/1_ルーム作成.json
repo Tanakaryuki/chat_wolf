@@ -7,7 +7,7 @@
         "voted":"null",
         "room_owner_id":"string"
     },
-    "room_id":"string",
+    "room_id":"null",
     "chat_text":"null",
     "turn_num":"null",
     "discuss_time":"null",
