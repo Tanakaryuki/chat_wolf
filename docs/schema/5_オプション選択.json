@@ -5,7 +5,8 @@
         "display_name":"null",
         "is_wolf":"null",
         "voted":"null",
-        "score":"number"
+        "score":"number",
+        "word":"null"
     },
     "room":{
         "room_id":"string",
@@ -19,7 +20,6 @@
         "vote_time":"number",
         "participants_num":"number"
     },
-    "word":"null",
     "time_now":"null",
     "vote_user":{
         "id":"null",
