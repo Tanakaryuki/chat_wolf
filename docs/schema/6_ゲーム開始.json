@@ -13,7 +13,7 @@
     "discuss_time":"null",
     "vote_time":"null",
     "participants_num":"null",
-    "word":"null",
+    "word":"string",
     "time_now":"null",
     "question":"null",
     "vote_user":{
