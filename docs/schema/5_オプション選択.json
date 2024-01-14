@@ -8,7 +8,7 @@
         "room_owner_id":"null",
         "score":"number"
     },
-    "room_id":"null",
+    "room_id":"string",
     "chat_text":"null",
     "turn_num":"number",
     "discuss_time":"number",
