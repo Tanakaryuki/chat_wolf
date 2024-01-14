@@ -13,10 +13,12 @@
         "vote_ended":"null"
     },
     "chat_text":"null",
-    "turn_num":"number",
-    "discuss_time":"number",
-    "vote_time":"number",
-    "participants_num":"number",
+    "option":{
+        "turn_num":"number",
+        "discuss_time":"number",
+        "vote_time":"number",
+        "participants_num":"number"
+    },
     "word":"string",
     "time_now":"null",
     "vote_user":{
