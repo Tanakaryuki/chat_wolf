@@ -1,7 +1,7 @@
 {
     "event_type":"enter_room",
     "user":{
-        "id":"string",
+        "id":"string || null(再入室に対応するため)",
         "display_name":"string",
         "is_wolf":"null",
         "voted":"null",
