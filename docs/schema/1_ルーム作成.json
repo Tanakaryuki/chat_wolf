@@ -1,0 +1,26 @@
+{
+    "event_type":"create_room",
+    "user":{
+        "id":"null",
+        "display_name":"string",
+        "is_wolf":"null",
+        "voted":"null"
+    },
+    "chat-text":"null",
+    "turn_num":"null",
+    "discuss_time":"null",
+    "vote_time":"null",
+    "participants_num":"null",
+    "word":"null",
+    "question":"null",
+    "vote_user":{
+        "id":"null",
+        "display_name":"null"
+    },
+    "vote_ended":"null",
+    "win":"null",
+    "users":[
+        "null"
+    ]
+}
+
