@@ -6,12 +6,14 @@
         "is_wolf":"null",
         "voted":"null"
     },
+    "room_id":"string",
     "chat-text":"null",
     "turn_num":"null",
     "discuss_time":"null",
     "vote_time":"null",
     "participants_num":"null",
     "word":"null",
+    "time_now":"null",
     "question":"null",
     "vote_user":{
         "id":"null",

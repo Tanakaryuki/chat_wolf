@@ -6,6 +6,7 @@
         "is_wolf":"null",
         "voted":"null"
     },
+    "room_id":"null",
     "chat-text":"string",
     "turn_num":"null",
     "discuss_time":"null",
