@@ -5,10 +5,13 @@
         "display_name":"string",
         "is_wolf":"null",
         "voted":"null",
-        "room_owner_id":"string",
         "score":"number"
     },
-    "room_id":"null",
+    "room":{
+        "room_id":"null",
+        "room_owner_id":"string",
+        "vote_ended":"null"
+    },
     "chat_text":"null",
     "turn_num":"null",
     "discuss_time":"null",
@@ -20,7 +23,6 @@
         "id":"null",
         "display_name":"null"
     },
-    "vote_ended":"null",
     "win":"null",
     "users":[
         "null"
