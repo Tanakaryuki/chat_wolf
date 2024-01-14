@@ -5,7 +5,8 @@
         "display_name":"null",
         "is_wolf":"null",
         "voted":"null",
-        "room_owner_id":"null"
+        "room_owner_id":"null",
+        "score":"number"
     },
     "room_id":"null",
     "chat_text":"null",
