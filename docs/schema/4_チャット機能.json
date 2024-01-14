@@ -1,0 +1,26 @@
+{
+    "event_type":"send_chat",
+    "user":{
+        "id":"null",
+        "display_name":"null",
+        "is_wolf":"null",
+        "voted":"null"
+    },
+    "chat-text":"string",
+    "turn_num":"null",
+    "discuss_time":"null",
+    "vote_time":"null",
+    "participants_num":"null",
+    "word":"null",
+    "time_now":"null",
+    "question":"null",
+    "vote_user":{
+        "id":"null",
+        "display_name":"null"
+    },
+    "vote_ended":"null",
+    "win":"null",
+    "users":[
+        "null"
+    ]
+}
