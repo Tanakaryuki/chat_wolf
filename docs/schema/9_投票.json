@@ -1,0 +1,27 @@
+{
+    "event_type":"vote",
+    "user":{
+        "id":"string",
+        "display_name":"string",
+        "is_wolf":"null",
+        "voted":"boolean"
+    },
+    "chat-text":"null",
+    "turn_num":"null",
+    "discuss_time":"null",
+    "vote_time":"null",
+    "participants_num":"null",
+    "word":"null",
+    "time_now":"null",
+    "question":"null",
+    "vote_user":{
+        "id":"string",
+        "display_name":"string",
+        "is_wolf":"null"
+    },
+    "vote_ended":"boolean",
+    "win":"null",
+    "users":[
+        "null"
+    ]
+}
