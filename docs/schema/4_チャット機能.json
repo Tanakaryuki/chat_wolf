@@ -1,8 +1,8 @@
 {
     "event_type":"send_chat",
     "user":{
-        "id":"null",
-        "display_name":"null",
+        "id":"string",
+        "display_name":"string",
         "is_wolf":"null",
         "voted":"null"
     },
