@@ -8,3 +8,4 @@ RUN go mod download && go mod verify
 COPY . .
 
 CMD ["go", "run", "server.go"]
+EXPOSE 8080
