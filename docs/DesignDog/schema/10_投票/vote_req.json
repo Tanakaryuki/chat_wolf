@@ -3,6 +3,7 @@
   "user": {
     "id": "string",
     "display_name": "string",
+    "icon": "string",
     "is_wolf": "null",
     "score": "number",
     "word": "null",
@@ -14,7 +15,7 @@
   "room": {
     "room_id": "string",
     "room_owner_id": "null",
-    "vote_ended": "boolean"
+    "vote_ended": "null"
   },
   "chat_text": "null",
   "option": {

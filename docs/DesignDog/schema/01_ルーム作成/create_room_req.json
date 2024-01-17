@@ -3,6 +3,7 @@
   "user": {
     "id": "null",
     "display_name": "string",
+    "icon": "string",
     "is_wolf": "null",
     "score": "null",
     "word": "null",

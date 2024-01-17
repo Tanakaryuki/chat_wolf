@@ -3,6 +3,7 @@
   "user": {
     "id": "string || null(再入室に対応するため)",
     "display_name": "string",
+    "icon": "string",
     "is_wolf": "null",
     "score": "number",
     "word": "null",

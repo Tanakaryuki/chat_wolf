@@ -3,6 +3,7 @@
   "user": {
     "id": "string(質問したユーザー)",
     "display_name": "string",
+    "icon": "string",
     "is_wolf": "null",
     "score": "null",
     "word": "null",
