@@ -1,12 +1,11 @@
 {
-  "event_type": "exit_room",
+  "event_type": "set_option",
   "user": {
-    "id": "string",
-    "display_name": "string",
+    "id": "null",
+    "display_name": "null",
     "is_wolf": "null",
-    "score": "number",
+    "score": "null",
     "word": "null",
-    "is_participant": "boolean",
     "vote": {
       "id": "null",
       "display_name": "null"
@@ -14,15 +13,15 @@
   },
   "room": {
     "room_id": "string",
-    "room_owner_id": "null",
+    "room_owner_id": "string",
     "vote_ended": "null"
   },
   "chat_text": "null",
   "option": {
-    "turn_num": "null",
-    "discuss_time": "null",
-    "vote_time": "null",
-    "participants_num": "null"
+    "turn_num": "number",
+    "discuss_time": "number",
+    "vote_time": "number",
+    "participants_num": "number"
   },
   "time_now": "null",
   "win": "null",

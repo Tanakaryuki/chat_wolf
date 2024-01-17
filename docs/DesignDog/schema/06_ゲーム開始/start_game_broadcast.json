@@ -1,12 +1,11 @@
 {
   "event_type": "start_game",
   "user": {
-    "id": "string",
-    "display_name": "string",
+    "id": "null",
+    "display_name": "null",
     "is_wolf": "null",
     "score": "null",
     "word": "null",
-    "is_participant": "null",
     "vote": {
       "id": "null",
       "display_name": "null"
@@ -26,5 +25,18 @@
   },
   "time_now": "null",
   "win": "null",
-  "users": ["null"]
+  "users": [
+    {
+      "id": "string(参加者一覧)",
+      "display_name": "string",
+      "is_wolf": "null",
+      "score": "number",
+      "word": "null",
+      "is_participant": "boolean",
+      "vote": {
+        "id": "null",
+        "display_name": "null"
+      }
+    }
+  ]
 }

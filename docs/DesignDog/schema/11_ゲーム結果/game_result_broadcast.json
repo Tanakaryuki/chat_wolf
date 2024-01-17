@@ -4,9 +4,12 @@
     "id": "null",
     "display_name": "null",
     "is_wolf": "null",
-    "voted": "null",
     "score": "number",
-    "word": "null"
+    "word": "null",
+    "vote": {
+      "id": "null",
+      "display_name": "null"
+    }
   },
   "room": {
     "room_id": "string",
@@ -21,18 +24,17 @@
     "participants_num": "null"
   },
   "time_now": "null",
-  "vote_user": {
-    "id": "null",
-    "display_name": "null"
-  },
   "win": "'wolf' ||'citizen'",
   "users": [
     {
       "display_name": "string",
       "is_wolf": "boolean",
-      "voted": "boolean",
       "score": "number",
-      "word": "string"
+      "word": "string",
+      "vote": {
+        "id": "string",
+        "display_name": "string"
+      }
     }
   ]
 }

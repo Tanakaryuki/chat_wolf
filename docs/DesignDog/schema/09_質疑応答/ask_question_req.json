@@ -1,12 +1,11 @@
 {
-  "event_type": "exit_room",
+  "event_type": "ask_question",
   "user": {
     "id": "string",
     "display_name": "string",
     "is_wolf": "null",
     "score": "number",
-    "word": "null",
-    "is_participant": "boolean",
+    "word": "string(要検討)",
     "vote": {
       "id": "null",
       "display_name": "null"
@@ -14,10 +13,10 @@
   },
   "room": {
     "room_id": "string",
-    "room_owner_id": "null",
+    "room_owner_id": "string",
     "vote_ended": "null"
   },
-  "chat_text": "null",
+  "chat_text": "string",
   "option": {
     "turn_num": "null",
     "discuss_time": "null",

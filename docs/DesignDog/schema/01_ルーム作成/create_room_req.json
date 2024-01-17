@@ -4,9 +4,13 @@
     "id": "null",
     "display_name": "string",
     "is_wolf": "null",
-    "voted": "null",
-    "score": "number",
-    "word": "null"
+    "score": "null",
+    "word": "null",
+    "is_participant": "null",
+    "vote": {
+      "id": "null",
+      "display_name": "null"
+    }
   },
   "room": {
     "room_id": "null",
@@ -21,10 +25,6 @@
     "participants_num": "null"
   },
   "time_now": "null",
-  "vote_user": {
-    "id": "null",
-    "display_name": "null"
-  },
   "win": "null",
   "users": ["null"]
 }

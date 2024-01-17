@@ -1,7 +1,7 @@
 {
-  "event_type": "exit_room",
+  "event_type": "enter_room",
   "user": {
-    "id": "string",
+    "id": "string(入室したユーザーの情報)",
     "display_name": "string",
     "is_wolf": "null",
     "score": "number",

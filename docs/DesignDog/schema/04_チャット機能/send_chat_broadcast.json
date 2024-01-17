@@ -1,7 +1,7 @@
 {
-  "event_type": "exit_room",
+  "event_type": "send_chat",
   "user": {
-    "id": "string",
+    "id": "string(送ったユーザーのid)",
     "display_name": "string",
     "is_wolf": "null",
     "score": "number",
@@ -17,7 +17,7 @@
     "room_owner_id": "null",
     "vote_ended": "null"
   },
-  "chat_text": "null",
+  "chat_text": "string",
   "option": {
     "turn_num": "null",
     "discuss_time": "null",
