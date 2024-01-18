@@ -20,10 +20,10 @@
   },
   "chat_text": "null",
   "option": {
-    "turn_num": "null",
-    "discuss_time": "null",
-    "vote_time": "null",
-    "participants_num": "null"
+    "turn_num": "string(my設定を入れる[基本デフォルト])",
+    "discuss_time": "string",
+    "vote_time": "string",
+    "participants_num": "string"
   },
   "time_now": "null",
   "win": "null",
