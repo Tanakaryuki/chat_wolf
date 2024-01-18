@@ -1,12 +1,11 @@
 ---
-name: 'DD'
-root: '.'
-output: './docs/DesignDoc'
-ignore: ['.']
+name: "DD"
+root: "."
+output: "./docs/DesignDoc"
+ignore: ["."]
 questions:
-  number: 'バージョン管理'
-  fileName: '何の機能のDDか教えてね'
-
+  number: "バージョン管理"
+  fileName: "何の機能のDDか教えてね"
 ---
 
 # `{{ inputs.number | rtrim }}_{{ inputs.fileName }}.md`
@@ -22,10 +21,7 @@ questions:
 
 ### シーケンス図
 
-### ER図
-
 ### スキーマ
 
 執筆日：{{ date "YYYY/MM/DD HH:mm" }}
-
 ```
