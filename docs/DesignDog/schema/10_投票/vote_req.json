@@ -7,6 +7,7 @@
     "is_wolf": "null",
     "score": "number",
     "word": "null",
+    "is_participant": "null",
     "vote": {
       "id": "string",
       "display_name": "string"
