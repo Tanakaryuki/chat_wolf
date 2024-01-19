@@ -1,0 +1,29 @@
+@font-face {
+    font-family: "SuperCoolMyFont";
+    src: url("/DokiDokiFantasia.otf")
+  }
+
+.button{
+    width:300px;
+    height: 100px;
+    background-color: yellow;
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 40px;
+    color: red;
+    box-shadow: -5px -5px 15px 5px rgba(0, 90, 255, 0.8), 5px 5px 15px 7px rgba(0, 213, 83, 0.8);
+    font-family: "SuperCoolMyFont",'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+/* 
+.original-box-shadow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #333333;
+    background-color: #dddddd;
+    font-size: 30px;
+    width: 300px;
+    height: 100px;
+    border-radius: 3px;
+    box-shadow: -5px -5px 15px 5px rgba(0, 90, 255, 0.8), 5px 5px 15px 7px rgba(0, 213, 83, 0.8);
+  } */

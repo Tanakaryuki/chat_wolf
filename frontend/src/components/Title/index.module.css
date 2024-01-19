@@ -1,0 +1,9 @@
+@font-face {
+  font-family: "SuperCoolMyFont";
+  src: url("/DokiDokiFantasia.otf");
+}
+.title {
+  font-size: 200px;
+  font-family: "SuperCoolMyFont", "Lucida Sans", "Lucida Sans Regular",
+    "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+}
