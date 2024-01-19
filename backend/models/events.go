@@ -1,5 +1,7 @@
 package models
 
+import "github.com/gorilla/websocket"
+
 type EventType string
 type Win string
 
@@ -73,4 +75,39 @@ type Protocol struct {
 	TimeNow   int     `json:"time_now,omitempty"`
 	Win       Win     `json:"win,omitempty"`
 	Users     []Users `json:"users,omitempty"`
+}
+
+type UserForRedis struct {
+	ID            string          `json:"id,omitempty"`
+	Conn          *websocket.Conn `json:"conn"`
+	DisplayName   string          `json:"display_name,omitempty"`
+	Icon          string          `json:"icon,omitempty"`
+	IsWolf        bool            `json:"is_wolf"`
+	Score         uint            `json:"score"`
+	Word          string          `json:"word,omitempty"`
+	IsParticipant bool            `json:"is_participant"`
+	Vote          `json:"vote,omitempty"`
+}
+
+type RoomForRedis struct {
+	RoomOwnerID string `json:"room_owner_id,omitempty"`
+	VoteEnded   bool   `json:"vote_ended,omitempty"`
+}
+
+type UserForChatLog struct {
+	ID          string `json:"id"`
+	DisplayName string `json:"display_name"`
+	Icon        string `json:"icon"`
+}
+
+type ChatLog struct {
+	User     UserForChatLog `json:"user"`
+	ChatText string         `json:"chat_text"`
+}
+
+type SetData struct {
+	User    []UserForRedis
+	ChatLog []ChatLog
+	Room    RoomForRedis
+	Option  Option
 }
