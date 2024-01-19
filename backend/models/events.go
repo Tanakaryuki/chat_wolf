@@ -1,23 +1,23 @@
 package models
 
-type EventType int
+type EventType string
 type Win int
 
 const (
-	CreateRoom EventType = iota + 1
-	EnterRoom
-	ChangeRoomOwner
-	ExitRoom
-	SendChat
-	SetOption
-	StartGame
-	SendTime
-	AskQuestion
-	EndQandA
-	GiveAnswer
-	VoteEvent
-	GameResult
-	PrepareCompletion
+	CreateRoom        = EventType("create_room")
+	EnterRoom         = EventType("enter_room")
+	ChangeRoomOwner   = EventType("change_room_owner")
+	ExitRoom          = EventType("exit_room")
+	SendChat          = EventType("send_chat")
+	SetOption         = EventType("set_option")
+	StartGame         = EventType("start_game")
+	SendTime          = EventType("send_time")
+	AskQuestion       = EventType("ask_question")
+	EndQandA          = EventType("end_q_and_a")
+	GiveAnswer        = EventType("give_answer")
+	VoteEvent         = EventType("vote_event")
+	GameResult        = EventType("game_result")
+	PrepareCompletion = EventType("prepare_completion")
 )
 
 const (
@@ -52,4 +52,12 @@ type Option struct {
 	DiscussTime     uint `json:"discuss_time"`
 	VoteTime        uint `json:"vote_time"`
 	ParticipantsNum uint `json:"participantsnum"`
+}
+
+type Protocol struct {
+	EventType EventType `json:"event_type"`
+	User      `json:"user"`
+	Room      `json:"room"`
+	ChatText  string `json:"chat_text"`
+	Option    `json:"option"`
 }
