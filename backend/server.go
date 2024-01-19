@@ -1,6 +1,9 @@
 package main
 
 import (
+	"context"
+	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/Tanakaryuki/chat_wolf/utils/config"
@@ -10,6 +13,7 @@ import (
 )
 
 var Cache *redis.Client
+var ctx = context.Background()
 
 func setupRedis() {
 	Cache = redis.NewClient(&redis.Options{
@@ -25,6 +29,12 @@ func main() {
 	config.LoadEnv()
 
 	setupRedis()
+
+	ping, err := Cache.Ping(ctx).Result()
+	if err != nil {
+		log.Fatalf("Could not connect to Redis: %v", err)
+	}
+	fmt.Println(ping)
 
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello, World!")
