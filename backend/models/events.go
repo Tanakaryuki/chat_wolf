@@ -13,9 +13,9 @@ const (
 	StartGame         = EventType("start_game")
 	SendTime          = EventType("send_time")
 	AskQuestion       = EventType("ask_question")
-	EndQandA          = EventType("end_q_and_a")
+	EndQandA          = EventType("end_Q_and_A")
 	GiveAnswer        = EventType("give_answer")
-	VoteEvent         = EventType("vote_event")
+	VoteEvent         = EventType("vote")
 	GameResult        = EventType("game_result")
 	PrepareCompletion = EventType("prepare_completion")
 )
@@ -44,7 +44,7 @@ type User struct {
 type Room struct {
 	RoomID      string `json:"room_id,omitempty"`
 	RoomOwnerID string `json:"room_owner_id,omitempty"`
-	VoteEnded   string `json:"vote_ended,omitempty"`
+	VoteEnded   bool   `json:"vote_ended,omitempty"`
 }
 
 type Option struct {
