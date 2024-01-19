@@ -1,5 +1,24 @@
 package models
 
+type EventType int
+
+const (
+	CreateRoom EventType = iota + 1
+	EnterRoom
+	ChangeRoomOwner
+	ExitRoom
+	SendChat
+	SetOption
+	StartGame
+	SendTime
+	AskQuestion
+	EndQandA
+	GiveAnswer
+	VoteEvent
+	GameResult
+	PrepareCompletion
+)
+
 type Vote struct {
 	ID          string `json:"id,omitempty"`
 	DisplayName string `json:"display_name,omitempty"`
