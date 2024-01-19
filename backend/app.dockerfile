@@ -2,10 +2,10 @@ FROM golang:1.21-alpine
 
 WORKDIR /app
 
-COPY go.mod go.sum ./
+COPY . ./
 
 RUN go mod download && go mod verify
-COPY . .
 
-CMD ["go", "run", "server.go"]
+
+CMD ["go", "run", "."]
 EXPOSE 8080
