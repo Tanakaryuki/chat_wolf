@@ -35,7 +35,7 @@ on:
 
 env:
   AWS_REGION: us-east-1 # set this to your preferred AWS region, e.g. us-west-1
-  ECR_REPOSITORY: 603605378301.dkr.ecr.us-east-1.amazonaws.com/chat-wolf # set this to your Amazon ECR repository name
+  ECR_REPOSITORY: chat-wolf # set this to your Amazon ECR repository name
   ECS_SERVICE: chat-wolf # set this to your Amazon ECS service name
   ECS_CLUSTER: chat-wolf-backend # set this to your Amazon ECS cluster name
   ECS_TASK_DEFINITION:
