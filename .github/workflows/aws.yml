@@ -79,6 +79,8 @@ jobs:
           # push it to ECR so that it can
           # be deployed to ECS.
           cd backend
+          touch .env
+          echo "REDIS_ADDRESS=${{ secrets.REDIS_ADDRESS }}" > .env
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f ./app.dockerfile .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT

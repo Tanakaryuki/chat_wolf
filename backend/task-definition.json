@@ -1,5 +1,4 @@
 {
-  "taskDefinitionArn": "arn:aws:ecs:us-east-1:603605378301:task-definition/backend:8",
   "containerDefinitions": [
     {
       "name": "chat-wolf",
