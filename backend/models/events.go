@@ -17,7 +17,7 @@ type User struct {
 }
 
 type Room struct {
-	RoomID      string `json:"room_id"`
-	RoomOwnerID string `json:"room_owner_id"`
-	VoteEnded   string `json:"vote_ended"`
+	RoomID      string `json:"room_id,omitempty"`
+	RoomOwnerID string `json:"room_owner_id,omitempty"`
+	VoteEnded   string `json:"vote_ended,omitempty"`
 }
