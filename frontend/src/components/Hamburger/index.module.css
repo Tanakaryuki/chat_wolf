@@ -1,0 +1,92 @@
+.container{
+  position: fixed;
+  top:30px;
+  right: 30px;
+}
+
+.openbtn8 {
+  position: relative; /*ボタン内側の基点となるためrelativeを指定*/
+  background: #ec6015;
+  cursor: pointer;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+/*ボタン内側*/
+.openbtn8 .openbtnArea {
+  transition: all 0.6s; /*アニメーションの設定*/
+  width: 50px;
+  height: 50px;
+}
+
+.openbtn8 span {
+  display: inline-block;
+  transition: all 0.4s;
+  position: absolute;
+  left: 14px;
+  height: 3px;
+  border-radius: 2px;
+  background: #fff;
+  width: 45%;
+}
+
+.openbtn8 span:nth-of-type(1) {
+  top: 15px;
+}
+
+.openbtn8 span:nth-of-type(2) {
+  top: 23px;
+}
+
+.openbtn8 span:nth-of-type(3) {
+  top: 31px;
+}
+
+/*activeクラスが付与されると .openbtn-areaが360度回転し、その中の線が回転して×に*/
+.openbtn8.active .openbtnArea {
+  transform: rotate(360deg);
+}
+
+.openbtn8.active span:nth-of-type(1) {
+  top: 18px;
+  left: 18px;
+  transform: translateY(6px) rotate(-45deg);
+  width: 30%;
+}
+
+.openbtn8.active span:nth-of-type(2) {
+  opacity: 0;
+}
+
+.openbtn8.active span:nth-of-type(3) {
+  top: 30px;
+  left: 18px;
+  transform: translateY(-6px) rotate(45deg);
+  width: 30%;
+}
+
+/* ========= レイアウトのためのCSS ===============
+
+body {
+  background: #f3f3f3;
+  padding: 20px;
+}
+
+a {
+  color: #333;
+  text-decoration: none;
+}
+
+.lead {
+  margin: 20px 0 0 0;
+}
+
+.btn-block {
+  width: 200px;
+  padding: 30px;
+} */
+
+.hoge{
+    background-color: red;
+}
