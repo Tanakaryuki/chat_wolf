@@ -35,7 +35,7 @@ func main() {
 	go hub.run()
 	ping, err := Cache.Ping(ctx).Result()
 	if err != nil {
-		log.Fatalf("Could not connect to Redis: %v", err)
+		log.Printf("Could not connect to Redis: %v", err)
 	}
 	fmt.Println(ping)
 
