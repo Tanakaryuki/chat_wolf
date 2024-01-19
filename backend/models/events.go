@@ -21,3 +21,10 @@ type Room struct {
 	RoomOwnerID string `json:"room_owner_id,omitempty"`
 	VoteEnded   string `json:"vote_ended,omitempty"`
 }
+
+type Option struct {
+	TurnNum         uint `json:"turn_num"`
+	DiscussTime     uint `json:"discuss_time"`
+	VoteTime        uint `json:"vote_time"`
+	ParticipantsNum uint `json:"participantsnum"`
+}
