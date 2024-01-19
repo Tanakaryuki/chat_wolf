@@ -3,6 +3,8 @@ package main
 import (
 	"net/http"
 
+	"github.com/Tanakaryuki/chat_wolf/utils/config"
+
 	"github.com/go-redis/redis/v8"
 	"github.com/labstack/echo/v4"
 )
@@ -12,13 +14,15 @@ var Cache *redis.Client
 func setupRedis() {
 	Cache = redis.NewClient(&redis.Options{
 		// docker-compose.ymlに指定したservice名+port
-		Addr: "redis:6379",
+		Addr: config.RedisAddress,
 		DB:   0,
 	})
 }
 
 func main() {
 	e := echo.New()
+
+	config.LoadEnv()
 
 	setupRedis()
 
