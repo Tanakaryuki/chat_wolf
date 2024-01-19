@@ -1,16 +1,16 @@
 {
-  "event_type": "vote",
+  "event_type": "prepare_completion",
   "user": {
-    "id": "string",
+    "id": "string(準備完了したユーザのid)",
     "display_name": "string",
     "icon": "string",
     "is_wolf": "null",
-    "score": "number",
+    "score": "null",
     "word": "null",
     "is_participant": "null",
     "vote": {
-      "id": "string",
-      "display_name": "string"
+      "id": "null",
+      "display_name": "null"
     }
   },
   "room": {
