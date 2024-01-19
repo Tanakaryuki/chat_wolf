@@ -42,9 +42,10 @@ func main() {
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello, World!")
 	})
-	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
-		ServeWs(hub, w, r)
+	e.GET("/ws", func(c echo.Context) error {
+		ServeWs(hub, c.Response().Writer, c.Request())
+		return nil
 	})
-	e.GET("/ws", Hello) //WebSocketテスト用
+	e.GET("/hello", Hello) //WebSocketテスト用
 	e.Logger.Fatal(e.Start(":8080"))
 }
