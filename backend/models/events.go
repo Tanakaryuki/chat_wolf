@@ -1,6 +1,7 @@
 package models
 
 type EventType int
+type Win int
 
 const (
 	CreateRoom EventType = iota + 1
@@ -17,6 +18,11 @@ const (
 	VoteEvent
 	GameResult
 	PrepareCompletion
+)
+
+const (
+	Wolf Win = iota + 1
+	citizen
 )
 
 type Vote struct {
