@@ -17,5 +17,5 @@ func LoadEnv() {
 	if err != nil {
 		log.Printf("読み込みできませんでした: %v", err)
 	}
-	RedisAddress = os.Getenv("REDISADDRESS")
+	RedisAddress = os.Getenv("REDIS_ADDRESS")
 }
