@@ -1,7 +1,7 @@
 package models
 
 type EventType string
-type Win int
+type Win string
 
 const (
 	CreateRoom        = EventType("create_room")
@@ -21,8 +21,8 @@ const (
 )
 
 const (
-	Wolf Win = iota + 1
-	citizen
+	Wolf    = Win("wolf")
+	citizen = Win("citizen")
 )
 
 type Vote struct {
@@ -54,10 +54,20 @@ type Option struct {
 	ParticipantsNum uint `json:"participantsnum"`
 }
 
+type Users struct {
+	DisplayName string `json:"display_name"`
+	IsWolf      bool   `json:"is_wolf"`
+	Score       uint   `json:"score"`
+	Word        string `json:"word"`
+	Vote        `json:"vote"`
+}
+
 type Protocol struct {
 	EventType EventType `json:"event_type"`
 	User      `json:"user"`
 	Room      `json:"room"`
 	ChatText  string `json:"chat_text"`
 	Option    `json:"option"`
+	TimeNow   int `json:"time_now"`
+	Win       Win `json:"win"`
 }
