@@ -55,11 +55,13 @@ type Option struct {
 }
 
 type Users struct {
-	DisplayName string `json:"display_name,omitempty"`
-	IsWolf      bool   `json:"is_wolf"`
-	Score       uint   `json:"score"`
-	Word        string `json:"word,omitempty"`
-	Vote        `json:"vote,omitempty"`
+	ID            string `json:"id"`
+	DisplayName   string `json:"display_name,omitempty"`
+	IsWolf        bool   `json:"is_wolf"`
+	Score         uint   `json:"score"`
+	Word          string `json:"word,omitempty"`
+	IsParticipant bool   `json:"is_participant"`
+	Vote          `json:"vote,omitempty"`
 }
 
 type Protocol struct {
