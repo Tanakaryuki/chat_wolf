@@ -68,6 +68,7 @@ type Protocol struct {
 	Room      `json:"room"`
 	ChatText  string `json:"chat_text"`
 	Option    `json:"option"`
-	TimeNow   int `json:"time_now"`
-	Win       Win `json:"win"`
+	TimeNow   int     `json:"time_now"`
+	Win       Win     `json:"win"`
+	Users     []Users `json:"users"`
 }
