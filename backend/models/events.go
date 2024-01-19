@@ -55,20 +55,20 @@ type Option struct {
 }
 
 type Users struct {
-	DisplayName string `json:"display_name"`
+	DisplayName string `json:"display_name,omitempty"`
 	IsWolf      bool   `json:"is_wolf"`
 	Score       uint   `json:"score"`
-	Word        string `json:"word"`
-	Vote        `json:"vote"`
+	Word        string `json:"word,omitempty"`
+	Vote        `json:"vote,omitempty"`
 }
 
 type Protocol struct {
 	EventType EventType `json:"event_type"`
-	User      `json:"user"`
-	Room      `json:"room"`
-	ChatText  string `json:"chat_text"`
-	Option    `json:"option"`
-	TimeNow   int     `json:"time_now"`
-	Win       Win     `json:"win"`
-	Users     []Users `json:"users"`
+	User      `json:"user,omitempty"`
+	Room      `json:"room,omitempty"`
+	ChatText  string `json:"chat_text,omitempty"`
+	Option    `json:"option,omitempty"`
+	TimeNow   int     `json:"time_now,omitempty"`
+	Win       Win     `json:"win,omitempty"`
+	Users     []Users `json:"users,omitempty"`
 }
