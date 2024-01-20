@@ -49,7 +49,7 @@ func main() {
 		return c.String(http.StatusOK, "Hello, World!")
 	})
 	e.GET("/ws", func(c echo.Context) error {
-		ServeWs(hub, c.Response().Writer, c.Request())
+		ServeWs(hub, c)
 		return nil
 	})
 	e.GET("/hello", Hello) //WebSocketテスト用
