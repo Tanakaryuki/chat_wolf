@@ -123,7 +123,7 @@ func (c *Client) writePump() {
 
 // serveWs handles websocket requests from the peer.
 func ServeWs(hub *Hub, c echo.Context) {
-	conn, err := upgrader.Upgrade(c.Response(), c.Request(), nil)
+	conn, err := upgrader.Upgrade(c.Response(), c.Request(), nil) //c.Response().Writerになる可能性あり
 	if err != nil {
 		c.Logger().Error(err)
 		return
@@ -138,7 +138,7 @@ func ServeWs(hub *Hub, c echo.Context) {
 }
 
 func Hello(c echo.Context) error {
-	ws, err := upgrader.Upgrade(c.Response(), c.Request(), nil)
+	ws, err := upgrader.Upgrade(c.Response(), c.Request(), nil) //c.Response().Writerになる可能性あり
 	if err != nil {
 		return err
 	}
