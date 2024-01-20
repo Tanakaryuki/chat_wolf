@@ -3,6 +3,8 @@ package clienthub
 import (
 	"math/rand"
 	"strconv"
+
+	"github.com/Tanakaryuki/chat_wolf/models"
 )
 
 var RoomID int = 10000
@@ -24,6 +26,42 @@ type Hub struct {
 	unregister chan *Client
 }
 
+func SetDataFromProtocol(ClientPrtocol *ClientPrtocol) models.SetData {
+	var SetData models.SetData
+	SetData.User = append(SetData.User, models.UserForRedis{
+		ID:          ClientPrtocol.Protocol.ID,
+		Conn:        ClientPrtocol.Client.Conn,
+		DisplayName: ClientPrtocol.Protocol.DisplayName,
+		Icon:        ClientPrtocol.Protocol.Icon,
+		IsWolf:      ClientPrtocol.Protocol.IsWolf,
+		Score:       ClientPrtocol.Protocol.Score,
+		Word:        ClientPrtocol.Protocol.Word,
+		Vote: models.Vote{
+			ID:          ClientPrtocol.Protocol.ID,
+			DisplayName: ClientPrtocol.Protocol.DisplayName,
+		},
+	})
+	SetData.ChatLog = append(SetData.ChatLog, models.ChatLog{
+		User: models.UserForChatLog{
+			ID:          ClientPrtocol.Protocol.ID,
+			DisplayName: ClientPrtocol.Protocol.DisplayName,
+			Icon:        ClientPrtocol.Protocol.Icon,
+		},
+		ChatText: ClientPrtocol.Protocol.ChatText,
+	})
+	SetData.Room = models.RoomForRedis{
+		RoomOwnerID: ClientPrtocol.Protocol.RoomOwnerID,
+		VoteEnded:   ClientPrtocol.Protocol.VoteEnded,
+	}
+	SetData.Option = models.Option{
+		TurnNum:         ClientPrtocol.Protocol.TurnNum,
+		DiscussTime:     ClientPrtocol.Protocol.DiscussTime,
+		VoteTime:        ClientPrtocol.Protocol.VoteTime,
+		ParticipantsNum: ClientPrtocol.Protocol.ParticipantsNum,
+	}
+	return SetData
+}
+
 func NewHub() *Hub {
 	return &Hub{
 		broadcast:  make(chan []byte),
@@ -41,6 +79,7 @@ func (h *Hub) Run() {
 			RoomID += rand.Intn(20)
 			roomnum := strconv.Itoa(RoomID)
 			h.clients[roomnum][&client.Client] = true
+			SetDataFromProtocol(client)
 		case client := <-h.register:
 			h.clients[client] = true
 		case client := <-h.unregister:
