@@ -13,7 +13,7 @@ export const Game = () => {
 
   useEffect(() => {
     const websocket = new ReconnectingWebSocket(
-      import.meta.env.REACT_APP_WS_URL ?? "ws://localhost:8080/ws"
+      import.meta.env.VITE_WS_URL ?? "ws://localhost:8080/ws"
     );
     socketRef.current = websocket;
 
