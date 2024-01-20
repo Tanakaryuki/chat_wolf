@@ -6,24 +6,15 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/Tanakaryuki/chat_wolf/clienthub"
+	"github.com/Tanakaryuki/chat_wolf/redis"
 	"github.com/Tanakaryuki/chat_wolf/utils/config"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"github.com/redis/go-redis/v9"
 )
 
-var Cache *redis.Client
 var ctx = context.Background()
-
-func setupRedis() {
-	Cache = redis.NewClient(&redis.Options{
-		// docker-compose.ymlに指定したservice名+port
-		Addr:     config.RedisAddress,
-		Password: "",
-		DB:       0,
-	})
-}
 
 func main() {
 	e := echo.New()
@@ -32,14 +23,14 @@ func main() {
 		Format: "time=${time_rfc3339_nano}, method=${method}, uri=${uri}, status=${status}\n",
 	}))
 	e.Use(middleware.CORS())
+	e.Use(middleware.Recover())
 
 	config.LoadEnv()
 
-	setupRedis()
-
-	hub := NewHub()
-	go hub.run()
-	ping, err := Cache.Ping(ctx).Result()
+	redis.SetupRedis()
+	hub := clienthub.NewHub(e.Logger)
+	go hub.Run()
+	ping, err := redis.Cache.Ping(ctx).Result()
 	if err != nil {
 		log.Printf("Could not connect to Redis: %v", err)
 	}
@@ -49,7 +40,7 @@ func main() {
 		return c.String(http.StatusOK, "Hello, World!")
 	})
 	e.GET("/ws", func(c echo.Context) error {
-		ServeWs(hub, c)
+		clienthub.ServeWs(hub, c)
 		return nil
 	})
 	e.GET("/hello", Hello) //WebSocketテスト用
