@@ -1,0 +1,36 @@
+.container{
+    display: flex;
+    margin: 5px;
+    width: 85%;
+    margin: 5%;
+}
+
+.userContainer{
+    display: flex;
+    flex-direction: column;
+}
+
+.messageContainer{
+    display: flex;
+}
+
+.message{
+    font-size: 15px;
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+.name{
+    width: 40px;
+    font-size: 10px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+
+}
+
+
+.avater{
+    
+}
+
