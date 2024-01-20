@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"math/rand"
 	"strconv"
+	"time"
 
 	"github.com/Tanakaryuki/chat_wolf/models"
 	"github.com/Tanakaryuki/chat_wolf/redis"
@@ -11,6 +12,10 @@ import (
 )
 
 var RoomID int = 10000
+
+const (
+	DefaultTime = 180 * time.Second
+)
 
 // Hub maintains the set of active clients and broadcasts messages to the
 // clients.
@@ -25,6 +30,7 @@ type Hub struct {
 	createRoom chan *ClientPrtocol
 	enterRoom  chan *ClientPrtocol
 	sendChat   chan *ClientPrtocol
+	startGame  chan *ClientPrtocol
 
 	// Unregister requests from clients.
 	unregister chan *Client
@@ -78,6 +84,7 @@ func NewHub(logger echo.Logger) *Hub {
 		broadcast:  make(chan *models.Broadcast),
 		enterRoom:  make(chan *ClientPrtocol),
 		createRoom: make(chan *ClientPrtocol),
+		startGame:  make(chan *ClientPrtocol),
 		unregister: make(chan *Client),
 		clients:    make(map[string]map[*Client]bool),
 		logger:     logger,
@@ -124,11 +131,21 @@ func (h *Hub) Run() {
 				break
 			}
 			h.logger.Error(setData.User)
+			if len(setData.User) >= 7 {
+				setData.User = append(setData.User, models.UserForRedis{
+					ID:            client.Protocol.User.ID,
+					Conn:          client.Client.Conn,
+					DisplayName:   client.Protocol.User.DisplayName,
+					Icon:          client.Protocol.User.Icon,
+					IsParticipant: false,
+				})
+			}
 			setData.User = append(setData.User, models.UserForRedis{
-				ID:          client.Protocol.User.ID,
-				Conn:        client.Client.Conn,
-				DisplayName: client.Protocol.User.DisplayName,
-				Icon:        client.Protocol.User.Icon,
+				ID:            client.Protocol.User.ID,
+				Conn:          client.Client.Conn,
+				DisplayName:   client.Protocol.User.DisplayName,
+				Icon:          client.Protocol.User.Icon,
+				IsParticipant: true,
 			})
 			data, err := json.Marshal(setData)
 			if err != nil {
@@ -185,6 +202,36 @@ func (h *Hub) Run() {
 				break
 			}
 			h.Broadcast(client.Protocol.Room.RoomID, data)
+		case client := <-h.startGame:
+			roomID := client.Protocol.Room.RoomID
+			ticker := time.NewTicker(1 * time.Second)
+			timeout := time.After(DefaultTime)
+			go func(roomID string) {
+				countDown := int(DefaultTime / time.Second)
+				for {
+					select {
+					case <-ticker.C:
+						countDown--
+						client.Protocol.TimeNow = countDown
+						data, err := json.Marshal(client.Protocol)
+						if err != nil {
+							h.logger.Error(err)
+							continue
+						}
+						h.Broadcast(roomID, data)
+					case <-timeout:
+						client.Protocol.TimeNow = 0
+						data, err := json.Marshal(client.Protocol)
+						if err != nil {
+							h.logger.Error(err)
+						}
+						h.Broadcast(roomID, data)
+						ticker.Stop()
+						return
+					}
+				}
+
+			}(roomID)
 		case broadcast := <-h.broadcast:
 			for client := range h.clients[broadcast.RoomNum] {
 				select {

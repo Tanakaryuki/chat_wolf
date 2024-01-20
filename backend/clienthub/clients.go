@@ -95,6 +95,7 @@ func (c *Client) readPump(logger echo.Logger) {
 			c.Hub.sendChat <- cp
 		case models.SetOption:
 		case models.StartGame:
+			c.Hub.startGame <- cp
 		case models.SendTime:
 		case models.AskQuestion:
 		case models.EndQandA:
