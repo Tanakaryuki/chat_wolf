@@ -12,7 +12,7 @@ export const Form: FC = () => {
           onChange={(e) => setMessage(e.target.value)}
           placeholder="入力してね！"
         />
-        <input type="button">送信</input>
+        <button type="button">送信</button>
       </div>
     </>
   );

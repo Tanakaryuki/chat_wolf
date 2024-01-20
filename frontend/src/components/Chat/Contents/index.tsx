@@ -2,6 +2,7 @@ import { ComponentProps, FC } from 'react'
 import { Message } from './Message'
 import { generateUUID } from '../../../libs/uuid'
 import styles from './index.module.css'
+import { Form } from './Form'
 
 export const Contents: FC = () => {
   const messages: Array<ComponentProps<typeof Message>> = [
@@ -33,9 +34,14 @@ export const Contents: FC = () => {
   ]
   return (
     <div className={styles.container}>
-      {messages.map(e => {
-        return <Message message={e.message} icon={e.icon} name={e.name} color={e.color} />
+        <div className={styles.messagesContainer}>
+      {messages.map((e,i) => {
+        return <Message key={i} message={e.message} icon={e.icon} name={e.name} color={e.color} />
       })}
+      </div>
+      <div className={styles.formContainer}>
+        <Form />
+      </div>
     </div>
   )
 }

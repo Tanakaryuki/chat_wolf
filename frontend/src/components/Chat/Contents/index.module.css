@@ -1,9 +1,13 @@
 .container {
-    width: 95vw;
-    height: 90vh;
-    margin: 0 auto;
-    background-color: #40e300bb;
-    padding-top: 15px;
-
+  width: 95vw;
+  height: 90vh;
+  margin: 0 auto;
+  background-color: #40e300bb;
+  padding-top: 15px;
 }
 
+.messagesContainer {
+}
+
+.formContainer {
+}
