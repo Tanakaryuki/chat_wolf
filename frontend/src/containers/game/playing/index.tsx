@@ -5,6 +5,11 @@ type Props = {
   children: ReactNode;
 };
 
-export const Container: FC<Props> = ({ children }) => {
-  return <main className={styles.container}>{children}</main>;
+export const PlayingContainer: FC<Props> = ({ children }) => {
+  return (
+    <main className={styles.container}>
+      <div className={styles.cloud} />
+      {children}
+    </main>
+  );
 };

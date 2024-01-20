@@ -1,72 +1,101 @@
-import { ReactNode } from 'react'
-import { EventType, Protocol } from '../../schema/common'
+import { EventType } from "../../schema/common";
+import { PlayingContainer } from "./playing";
+import { WaitingContainer } from "./waiting";
+import { ResultContainer } from "./result";
+import { CreateRoom } from "./event/CreateRoom";
 
-export const SwitchingHub = (schema: Protocol | undefined) => {
-  switch (schema?.eventType) {
+export const SwitchingHub = (eventType: EventType) => {
+  switch (eventType) {
     case EventType.askQuestion:
-      return <></>
+      return (
+        <PlayingContainer>
+          <></>
+        </PlayingContainer>
+      );
     case EventType.changeRoomOwner:
-      return <></>
+      return (
+        <WaitingContainer>
+          <></>
+        </WaitingContainer>
+      );
     case EventType.createRoom:
-      return <></>
+      return (
+        <PlayingContainer>
+          <CreateRoom />
+        </PlayingContainer>
+      );
     case EventType.endQandA:
-      return <></>
+      return (
+        <PlayingContainer>
+          <></>
+        </PlayingContainer>
+      );
     case EventType.enterRoom:
-      return <></>
+      return (
+        <WaitingContainer>
+          <></>
+        </WaitingContainer>
+      );
     case EventType.exitRoom:
-      return <></>
+      return (
+        <WaitingContainer>
+          <></>
+        </WaitingContainer>
+      );
     case EventType.gameResult:
-      return <></>
+      return (
+        <ResultContainer>
+          <></>
+        </ResultContainer>
+      );
     case EventType.giveAnswer:
-      return <></>
+      return (
+        <PlayingContainer>
+          <></>
+        </PlayingContainer>
+      );
     case EventType.prepareCompletion:
-      return <></>
+      return (
+        <WaitingContainer>
+          <></>
+        </WaitingContainer>
+      );
     case EventType.sendChat:
-      return <></>
+      return (
+        <PlayingContainer>
+          <></>
+        </PlayingContainer>
+      );
     case EventType.sendTime:
-      return <></>
+      return (
+        <PlayingContainer>
+          <></>
+        </PlayingContainer>
+      );
     case EventType.setOption:
-      return <></>
+      return (
+        <WaitingContainer>
+          <></>
+        </WaitingContainer>
+      );
     case EventType.startGame:
-      return <></>
+      return (
+        <PlayingContainer>
+          <></>
+        </PlayingContainer>
+      );
     case EventType.vote:
-      return <></>
+      return (
+        <PlayingContainer>
+          <></>
+        </PlayingContainer>
+      );
     default:
-      return <></>
+      return (
+        <></>
+        // <WaitingContainer>
+        //   <></>
+        // </WaitingContainer>
+      );
   }
-}
-
-export const SwitchingSeen = (schema: Protocol | undefined, children: ReactNode) => {
-  switch (schema?.eventType) {
-    case EventType.askQuestion:
-      return <>{children}</>
-    case EventType.changeRoomOwner:
-      return <></>
-    case EventType.createRoom:
-      return <></>
-    case EventType.endQandA:
-      return <></>
-    case EventType.enterRoom:
-      return <></>
-    case EventType.exitRoom:
-      return <></>
-    case EventType.gameResult:
-      return <></>
-    case EventType.giveAnswer:
-      return <></>
-    case EventType.prepareCompletion:
-      return <></>
-    case EventType.sendChat:
-      return <></>
-    case EventType.sendTime:
-      return <></>
-    case EventType.setOption:
-      return <></>
-    case EventType.startGame:
-      return <></>
-    case EventType.vote:
-      return <></>
-    default:
-      return <></>
-  }
-}
+};

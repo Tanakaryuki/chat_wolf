@@ -1,0 +1,16 @@
+.container{
+    width: 100vw;
+    height:100vh;
+}
+
+.linkContainer{
+    display: flex;
+    justify-content: center;
+    gap:10px;
+
+}
+
+.linkText{
+    font-size: 20px;
+    font-weight: 900;
+}
