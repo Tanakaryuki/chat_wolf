@@ -1,10 +1,12 @@
 package clienthub
 
 import (
+	"encoding/json"
 	"math/rand"
 	"strconv"
 
 	"github.com/Tanakaryuki/chat_wolf/models"
+	"github.com/Tanakaryuki/chat_wolf/redis"
 )
 
 var RoomID int = 10000
@@ -79,7 +81,9 @@ func (h *Hub) Run() {
 			RoomID += rand.Intn(20)
 			roomnum := strconv.Itoa(RoomID)
 			h.clients[roomnum][&client.Client] = true
-			SetDataFromProtocol(client)
+			setData := SetDataFromProtocol(client)
+			data, _ := json.Marshal(setData)
+			redis.Set(roomnum, data)
 		case client := <-h.register:
 			h.clients[client] = true
 		case client := <-h.unregister:
