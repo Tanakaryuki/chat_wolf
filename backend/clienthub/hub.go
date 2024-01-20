@@ -1,4 +1,4 @@
-package main
+package clienthub
 
 import (
 	"math/rand"
@@ -17,7 +17,7 @@ type Hub struct {
 	broadcast chan []byte
 
 	// Register requests from the clients.
-	createRoom chan *Client
+	createRoom chan *ClientPrtocol
 	enterRoom  chan *Client
 
 	// Unregister requests from clients.
@@ -28,19 +28,19 @@ func NewHub() *Hub {
 	return &Hub{
 		broadcast:  make(chan []byte),
 		enterRoom:  make(chan *Client),
-		createRoom: make(chan *Client),
+		createRoom: make(chan *ClientPrtocol),
 		unregister: make(chan *Client),
 		clients:    make(map[string]map[*Client]bool),
 	}
 }
 
-func (h *Hub) run() {
+func (h *Hub) Run() {
 	for {
 		select {
 		case client := <-h.createRoom:
 			RoomID += rand.Intn(20)
 			roomnum := strconv.Itoa(RoomID)
-			h.clients[roomnum][client] = true
+			h.clients[roomnum][&client.Client] = true
 		case client := <-h.register:
 			h.clients[client] = true
 		case client := <-h.unregister:

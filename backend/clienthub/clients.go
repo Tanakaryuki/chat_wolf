@@ -1,4 +1,4 @@
-package main
+package clienthub
 
 import (
 	"fmt"
@@ -49,6 +49,11 @@ type Client struct {
 	send chan []byte
 }
 
+type ClientPrtocol struct {
+	Client   Client
+	Protocol models.Protocol
+}
+
 // readPump pumps messages from the websocket connection to the hub.
 //
 // The application runs readPump in a per-connection goroutine. The application
@@ -71,9 +76,11 @@ func (c *Client) readPump() {
 			}
 			break
 		}
+		var cp *ClientPrtocol
+		cp.Protocol = message
 		switch message.EventType {
 		case models.CreateRoom:
-			c.hub.createRoom <- c
+			c.hub.createRoom <- cp
 		case models.EnterRoom:
 
 		case models.ChangeRoomOwner:

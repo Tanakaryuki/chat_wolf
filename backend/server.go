@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/Tanakaryuki/chat_wolf/clienthub"
 	"github.com/Tanakaryuki/chat_wolf/redis"
 	"github.com/Tanakaryuki/chat_wolf/utils/config"
 
@@ -27,8 +28,8 @@ func main() {
 
 	redis.SetupRedis()
 
-	hub := NewHub()
-	go hub.run()
+	hub := clienthub.NewHub()
+	go hub.Run()
 	ping, err := redis.Cache.Ping(ctx).Result()
 	if err != nil {
 		log.Printf("Could not connect to Redis: %v", err)
@@ -39,9 +40,9 @@ func main() {
 		return c.String(http.StatusOK, "Hello, World!")
 	})
 	e.GET("/ws", func(c echo.Context) error {
-		ServeWs(hub, c)
+		clienthub.ServeWs(hub, c)
 		return nil
 	})
-	e.GET("/hello", Hello) //WebSocketテスト用
+	e.GET("/hello", clienthub.Hello) //WebSocketテスト用
 	e.Logger.Fatal(e.Start(":8080"))
 }
