@@ -6,24 +6,14 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/Tanakaryuki/chat_wolf/redis"
 	"github.com/Tanakaryuki/chat_wolf/utils/config"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"github.com/redis/go-redis/v9"
 )
 
-var Cache *redis.Client
 var ctx = context.Background()
-
-func setupRedis() {
-	Cache = redis.NewClient(&redis.Options{
-		// docker-compose.ymlに指定したservice名+port
-		Addr:     config.RedisAddress,
-		Password: "",
-		DB:       0,
-	})
-}
 
 func main() {
 	e := echo.New()
@@ -35,11 +25,11 @@ func main() {
 
 	config.LoadEnv()
 
-	setupRedis()
+	redis.SetupRedis()
 
 	hub := NewHub()
 	go hub.run()
-	ping, err := Cache.Ping(ctx).Result()
+	ping, err := redis.Cache.Ping(ctx).Result()
 	if err != nil {
 		log.Printf("Could not connect to Redis: %v", err)
 	}
