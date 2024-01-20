@@ -12,7 +12,9 @@ export const Game = () => {
   const socketRef = useRef<ReconnectingWebSocket>();
 
   useEffect(() => {
-    const websocket = new ReconnectingWebSocket("ws://localhost:8080/ws");
+    const websocket = new ReconnectingWebSocket(
+      process.env.API_KEY ?? "ws://localhost:8080/ws"
+    );
     socketRef.current = websocket;
 
     const onMessage = (event: MessageEvent<string>) => {
