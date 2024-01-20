@@ -9,9 +9,9 @@ import (
 
 func StringToJson(rawMsg string) models.SetData {
 	jsonBytes := []byte(rawMsg)
-	var jsonMsg models.SetData
-	if err := json.Unmarshal(jsonBytes, &jsonMsg); err != nil {
+	var jsonStruct models.SetData
+	if err := json.Unmarshal(jsonBytes, &jsonStruct); err != nil {
 		log.Fatal(err)
 	}
-	return jsonMsg
+	return jsonStruct
 }
