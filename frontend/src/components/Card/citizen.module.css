@@ -1,0 +1,47 @@
+.card-container {
+    perspective: 1000px; /* 3D効果の深さを調整 */
+    width: 256px; /* コンテナの幅 */
+    height: 256px; /* コンテナの高さ */
+    margin: auto; /* 中央揃え */
+  }
+
+  .card {
+    width: 100%; /* コンテナに合わせて幅を100%に */
+    height: 100%; /* コンテナに合わせて高さを100%に */
+    position: relative;
+    transform-style: preserve-3d;
+    animation: rotate 4s  linear forwards; /* アニメーションの速度を調整 */
+  }
+
+  .card-front, .card-back {
+    position: absolute;
+    backface-visibility: hidden; /* 裏面を見えなくする */
+    width: 100%;
+    height: 100%;
+    background-size: contain; /* 画像を縮小して全体が見えるように */
+    background-repeat: no-repeat; /* 画像の繰り返しを防ぐ */
+    border-radius: 20px;
+
+  }
+
+  .card-front {
+    background-image: url('/citizen.webp'); /* 表面の画像 */
+    transform: rotateY(180deg); /* 裏面は180度回転 */
+
+  }
+
+  .card-back {
+    background-image: url('/card.png'); /* 裏面の画像 */
+  }
+
+  @keyframes rotate {
+    0% {
+      transform: rotateY(0deg);
+    }
+    90%{
+        transform: rotateY(90deg);
+    }
+    100% {
+      transform: rotateY(180deg);
+    }
+  }
