@@ -18,11 +18,12 @@ type Hub struct {
 	clients map[string]map[*Client]bool
 
 	// Inbound messages from the clients.
-	broadcast chan []byte
+	broadcast chan *models.Broadcast
 
 	// Register requests from the clients.
 	createRoom chan *ClientPrtocol
-	enterRoom  chan *Client
+	enterRoom  chan *ClientPrtocol
+	sendChat   chan *ClientPrtocol
 
 	// Unregister requests from clients.
 	unregister chan *Client
@@ -66,8 +67,8 @@ func SetDataFromProtocol(ClientPrtocol *ClientPrtocol) models.SetData {
 
 func NewHub() *Hub {
 	return &Hub{
-		broadcast:  make(chan []byte),
-		enterRoom:  make(chan *Client),
+		broadcast:  make(chan *models.Broadcast),
+		enterRoom:  make(chan *ClientPrtocol),
 		createRoom: make(chan *ClientPrtocol),
 		unregister: make(chan *Client),
 		clients:    make(map[string]map[*Client]bool),
@@ -84,20 +85,46 @@ func (h *Hub) Run() {
 			setData := SetDataFromProtocol(client)
 			data, _ := json.Marshal(setData)
 			redis.Set(roomnum, data)
-		case client := <-h.register:
-			h.clients[client] = true
-		case client := <-h.unregister:
-			if _, ok := h.clients[client]; ok {
-				delete(h.clients, client)
-				close(client.send)
+		case client := <-h.enterRoom:
+			getData, err := redis.Get(client.Protocol.Room.RoomID)
+			if err == nil {
+				var setData *models.SetData
+				json.Unmarshal(getData, setData)
+				h.clients[client.Protocol.Room.RoomID][&client.Client] = true
+				data, _ := json.Marshal(client.Protocol)
+				h.broadcast <- &models.Broadcast{
+					RoomNum: client.Protocol.Room.RoomID,
+					Data:    data,
+				}
 			}
-		case message := <-h.broadcast:
-			for client := range h.clients {
+		case client := <-h.sendChat:
+			getData, err := redis.Get(client.Protocol.Room.RoomID)
+			if err == nil {
+				var setData *models.SetData
+				json.Unmarshal(getData, setData)
+				setData.ChatLog = append(setData.ChatLog, models.ChatLog{
+					User: models.UserForChatLog{
+						ID:          client.Protocol.User.ID,
+						DisplayName: client.Protocol.User.DisplayName,
+						Icon:        client.Protocol.User.Icon,
+					},
+					ChatText: client.Protocol.ChatText,
+				})
+				data, _ := json.Marshal(setData)
+				redis.Set(client.Protocol.Room.RoomID, data)
+				data, _ = json.Marshal(client.Protocol)
+				h.broadcast <- &models.Broadcast{
+					RoomNum: client.Protocol.Room.RoomID,
+					Data:    data,
+				}
+			}
+		case broadcast := <-h.broadcast:
+			for client := range h.clients[broadcast.RoomNum] {
 				select {
-				case client.send <- message:
+				case client.Send <- broadcast.Data:
 				default:
-					close(client.send)
-					delete(h.clients, client)
+					close(client.Send)
+					delete(h.clients[broadcast.RoomNum], client)
 				}
 			}
 		}

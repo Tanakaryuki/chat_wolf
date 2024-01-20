@@ -101,3 +101,8 @@ type SetData struct {
 	Room    RoomForRedis   `json:"room"`
 	Option  Option         `json:"option"`
 }
+
+type Broadcast struct {
+	RoomNum string
+	Data    []byte
+}

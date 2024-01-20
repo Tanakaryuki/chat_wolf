@@ -27,7 +27,7 @@ const (
 
 var (
 	newline = []byte{'\n'}
-	space   = []byte{' '}
+	// space  = []byte{' '}
 )
 
 var upgrader = websocket.Upgrader{
@@ -82,10 +82,11 @@ func (c *Client) readPump() {
 		case models.CreateRoom:
 			c.Hub.createRoom <- cp
 		case models.EnterRoom:
-
+			c.Hub.enterRoom <- cp
 		case models.ChangeRoomOwner:
 		case models.ExitRoom:
 		case models.SendChat:
+			c.Hub.sendChat <- cp
 		case models.SetOption:
 		case models.StartGame:
 		case models.SendTime:
