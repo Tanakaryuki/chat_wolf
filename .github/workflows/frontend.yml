@@ -25,7 +25,9 @@ jobs:
           pnpm install
 
       - name: Build
-        run: pnpm build
+        run: |
+          cd frontend  
+          pnpm build
 
       - name: Deploy
         env:
