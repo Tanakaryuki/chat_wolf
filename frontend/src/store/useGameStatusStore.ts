@@ -1,15 +1,22 @@
-import { create } from 'zustand'
-import { Status } from '../schema/status'
+import { create } from "zustand";
+import { Meta } from "../schema/status";
+import { EventType } from "../schema/common";
 
 type State = {
-  status: Status
-}
+  status: EventType;
+  meta: Meta;
+};
 
 type Action = {
-  setStatus: (status: Status) => void
-}
+  setStatus: (status: EventType) => void;
+  setMeta: (meta: Meta) => void;
+  setRoomId: (id: string) => void;
+};
 
-export const useGameStatusStore = create<State & Action>()(set => ({
-  status: {} as Status,
-  setStatus: status => set(() => ({ status: status })),
-}))
+export const useGameStatusStore = create<State & Action>()((set) => ({
+  status: EventType.other,
+  meta: {} as Meta,
+  setStatus: (status) => set(() => ({ status: status })),
+  setMeta: (meta) => set(() => ({ meta: meta })),
+  setRoomId: (id) => set(() => ({ meta: { roomId: id } })),
+}));
