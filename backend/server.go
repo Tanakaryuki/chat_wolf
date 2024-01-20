@@ -23,12 +23,12 @@ func main() {
 		Format: "time=${time_rfc3339_nano}, method=${method}, uri=${uri}, status=${status}\n",
 	}))
 	e.Use(middleware.CORS())
+	e.Use(middleware.Recover())
 
 	config.LoadEnv()
 
 	redis.SetupRedis()
-
-	hub := clienthub.NewHub()
+	hub := clienthub.NewHub(e.Logger)
 	go hub.Run()
 	ping, err := redis.Cache.Ping(ctx).Result()
 	if err != nil {

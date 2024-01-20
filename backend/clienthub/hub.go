@@ -7,6 +7,7 @@ import (
 
 	"github.com/Tanakaryuki/chat_wolf/models"
 	"github.com/Tanakaryuki/chat_wolf/redis"
+	"github.com/labstack/echo/v4"
 )
 
 var RoomID int = 10000
@@ -27,10 +28,17 @@ type Hub struct {
 
 	// Unregister requests from clients.
 	unregister chan *Client
+
+	logger echo.Logger
 }
 
-func SetDataFromProtocol(ClientPrtocol *ClientPrtocol) models.SetData {
-	var SetData models.SetData
+func InitSetDataFromProtocol(ClientPrtocol *ClientPrtocol) models.SetData {
+	SetData := models.SetData{
+		User:    []models.UserForRedis{},
+		ChatLog: []models.ChatLog{},
+		Room:    models.RoomForRedis{},
+		Option:  models.Option{},
+	}
 	SetData.User = append(SetData.User, models.UserForRedis{
 		ID:          ClientPrtocol.Protocol.ID,
 		Conn:        ClientPrtocol.Client.Conn,
@@ -65,13 +73,14 @@ func SetDataFromProtocol(ClientPrtocol *ClientPrtocol) models.SetData {
 	return SetData
 }
 
-func NewHub() *Hub {
+func NewHub(logger echo.Logger) *Hub {
 	return &Hub{
 		broadcast:  make(chan *models.Broadcast),
 		enterRoom:  make(chan *ClientPrtocol),
 		createRoom: make(chan *ClientPrtocol),
 		unregister: make(chan *Client),
 		clients:    make(map[string]map[*Client]bool),
+		logger:     logger,
 	}
 }
 
@@ -81,43 +90,101 @@ func (h *Hub) Run() {
 		case client := <-h.createRoom:
 			RoomID += rand.Intn(20)
 			roomnum := strconv.Itoa(RoomID)
-			h.clients[roomnum][&client.Client] = true
-			setData := SetDataFromProtocol(client)
-			data, _ := json.Marshal(setData)
+			if _, ok := h.clients[roomnum][&client.Client]; ok {
+				h.clients[roomnum][&client.Client] = true
+			} else {
+				h.clients[roomnum] = map[*Client]bool{}
+				h.clients[roomnum][&client.Client] = true
+			}
+			client.Protocol.Room.RoomID = roomnum
+			setData := InitSetDataFromProtocol(client)
+			data, err := json.Marshal(setData)
+			if err != nil {
+				h.logger.Error(err)
+				break
+			}
 			redis.Set(roomnum, data)
+			data, err = json.Marshal(client.Protocol)
+			if err != nil {
+				h.logger.Error(err)
+				break
+			}
+			h.logger.Error("start broadcast")
+			h.Broadcast(roomnum, data)
 		case client := <-h.enterRoom:
 			getData, err := redis.Get(client.Protocol.Room.RoomID)
-			if err == nil {
-				var setData *models.SetData
-				json.Unmarshal(getData, setData)
-				h.clients[client.Protocol.Room.RoomID][&client.Client] = true
-				data, _ := json.Marshal(client.Protocol)
-				h.broadcast <- &models.Broadcast{
-					RoomNum: client.Protocol.Room.RoomID,
-					Data:    data,
-				}
+			if err != nil {
+				h.logger.Error(err)
+				break
 			}
+			var setData models.SetData
+			err = json.Unmarshal(getData, &setData)
+			if err != nil {
+				h.logger.Error(err)
+				break
+			}
+			h.logger.Error(setData.User)
+			setData.User = append(setData.User, models.UserForRedis{
+				ID:          client.Protocol.User.ID,
+				Conn:        client.Client.Conn,
+				DisplayName: client.Protocol.User.DisplayName,
+				Icon:        client.Protocol.User.Icon,
+			})
+			data, err := json.Marshal(setData)
+			if err != nil {
+				h.logger.Error(err)
+				break
+			}
+			if err = redis.Set(client.Protocol.Room.RoomID, data); err != nil {
+				h.logger.Error(err)
+				break
+			}
+			roomNum := client.Protocol.Room.RoomID
+			if _, ok := h.clients[roomNum][&client.Client]; ok {
+				h.clients[roomNum][&client.Client] = true
+			} else {
+				h.clients[roomNum] = map[*Client]bool{}
+				h.clients[roomNum][&client.Client] = true
+			}
+			data, err = json.Marshal(client.Protocol)
+			if err != nil {
+				h.logger.Error(err)
+				break
+			}
+			h.Broadcast(client.Protocol.Room.RoomID, data)
 		case client := <-h.sendChat:
 			getData, err := redis.Get(client.Protocol.Room.RoomID)
-			if err == nil {
-				var setData *models.SetData
-				json.Unmarshal(getData, setData)
-				setData.ChatLog = append(setData.ChatLog, models.ChatLog{
-					User: models.UserForChatLog{
-						ID:          client.Protocol.User.ID,
-						DisplayName: client.Protocol.User.DisplayName,
-						Icon:        client.Protocol.User.Icon,
-					},
-					ChatText: client.Protocol.ChatText,
-				})
-				data, _ := json.Marshal(setData)
-				redis.Set(client.Protocol.Room.RoomID, data)
-				data, _ = json.Marshal(client.Protocol)
-				h.broadcast <- &models.Broadcast{
-					RoomNum: client.Protocol.Room.RoomID,
-					Data:    data,
-				}
+			if err != nil {
+				h.logger.Error(err)
+				break
 			}
+			var setData *models.SetData
+			err = json.Unmarshal(getData, setData)
+			if err != nil {
+				h.logger.Error(err)
+				break
+			}
+
+			setData.ChatLog = append(setData.ChatLog, models.ChatLog{
+				User: models.UserForChatLog{
+					ID:          client.Protocol.User.ID,
+					DisplayName: client.Protocol.User.DisplayName,
+					Icon:        client.Protocol.User.Icon,
+				},
+				ChatText: client.Protocol.ChatText,
+			})
+			data, err := json.Marshal(setData)
+			if err != nil {
+				h.logger.Error(err)
+				break
+			}
+			redis.Set(client.Protocol.Room.RoomID, data)
+			data, err = json.Marshal(client.Protocol)
+			if err != nil {
+				h.logger.Error(err)
+				break
+			}
+			h.Broadcast(client.Protocol.Room.RoomID, data)
 		case broadcast := <-h.broadcast:
 			for client := range h.clients[broadcast.RoomNum] {
 				select {
@@ -127,6 +194,19 @@ func (h *Hub) Run() {
 					delete(h.clients[broadcast.RoomNum], client)
 				}
 			}
+		}
+	}
+}
+
+func (h *Hub) Broadcast(roomNum string, data []byte) {
+	h.logger.Error("start broadcasts 2")
+	h.logger.Error(h.clients[roomNum])
+	for client := range h.clients[roomNum] {
+		select {
+		case client.Send <- data:
+		default:
+			close(client.Send)
+			delete(h.clients[roomNum], client)
 		}
 	}
 }

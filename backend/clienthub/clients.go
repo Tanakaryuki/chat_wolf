@@ -2,7 +2,6 @@ package clienthub
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"time"
 
@@ -22,7 +21,7 @@ const (
 	pingPeriod = (pongWait * 9) / 10
 
 	// Maximum message size allowed from peer.
-	maxMessageSize = 512
+	maxMessageSize = 4096
 )
 
 var (
@@ -31,8 +30,8 @@ var (
 )
 
 var upgrader = websocket.Upgrader{
-	ReadBufferSize:  1024,
-	WriteBufferSize: 1024,
+	ReadBufferSize:  4096,
+	WriteBufferSize: 4096,
 	CheckOrigin: func(r *http.Request) bool {
 		return true
 	},
@@ -59,7 +58,7 @@ type ClientPrtocol struct {
 // The application runs readPump in a per-connection goroutine. The application
 // ensures that there is at most one reader on a connection by executing all
 // reads from this goroutine.
-func (c *Client) readPump() {
+func (c *Client) readPump(logger echo.Logger) {
 	defer func() {
 		c.Hub.unregister <- c
 		c.Conn.Close()
@@ -68,18 +67,25 @@ func (c *Client) readPump() {
 	c.Conn.SetReadDeadline(time.Now().Add(pongWait))
 	c.Conn.SetPongHandler(func(string) error { c.Conn.SetReadDeadline(time.Now().Add(pongWait)); return nil })
 	for {
+		logger.Error("hello, client: %v", c)
 		var message models.Protocol
 		err := c.Conn.ReadJSON(&message)
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
-				log.Printf("error: %v", err)
+				logger.Error("error: %v", err)
 			}
+			logger.Error(err)
 			break
 		}
-		var cp *ClientPrtocol
-		cp.Protocol = message
+		logger.Error("start switch statment")
+		cp := &ClientPrtocol{
+			Client:   *c,
+			Protocol: message,
+		}
+		logger.Error(cp)
 		switch message.EventType {
 		case models.CreateRoom:
+			logger.Error("Call Create Room")
 			c.Hub.createRoom <- cp
 		case models.EnterRoom:
 			c.Hub.enterRoom <- cp
@@ -96,6 +102,8 @@ func (c *Client) readPump() {
 		case models.VoteEvent:
 		case models.GameResult:
 		case models.PrepareCompletion:
+		default:
+			logger.Error("This is Called")
 		}
 	}
 }
@@ -105,7 +113,7 @@ func (c *Client) readPump() {
 // A goroutine running writePump is started for each connection. The
 // application ensures that there is at most one writer to a connection by
 // executing all writes from this goroutine.
-func (c *Client) writePump() {
+func (c *Client) writePump(logger echo.Logger) {
 	ticker := time.NewTicker(pingPeriod)
 	defer func() {
 		ticker.Stop()
@@ -117,12 +125,14 @@ func (c *Client) writePump() {
 			c.Conn.SetWriteDeadline(time.Now().Add(writeWait))
 			if !ok {
 				// The hub closed the channel.
+				logger.Error("c.Send not ok")
 				c.Conn.WriteMessage(websocket.CloseMessage, []byte{})
 				return
 			}
 
 			w, err := c.Conn.NextWriter(websocket.TextMessage)
 			if err != nil {
+				logger.Error(err)
 				return
 			}
 			w.Write(message)
@@ -135,11 +145,13 @@ func (c *Client) writePump() {
 			}
 
 			if err := w.Close(); err != nil {
+				logger.Error(err)
 				return
 			}
 		case <-ticker.C:
 			c.Conn.SetWriteDeadline(time.Now().Add(writeWait))
 			if err := c.Conn.WriteMessage(websocket.PingMessage, nil); err != nil {
+				logger.Error(err)
 				return
 			}
 		}
@@ -157,8 +169,8 @@ func ServeWs(hub *Hub, c echo.Context) {
 
 	// Allow collection of memory referenced by the caller by doing all work in
 	// new goroutines.
-	go client.writePump()
-	go client.readPump()
+	go client.writePump(c.Logger())
+	go client.readPump(c.Logger())
 }
 
 func Hello(c echo.Context) error {
