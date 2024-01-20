@@ -1,29 +1,38 @@
-import type { FC } from 'react'
-import { Button } from '../../../components/Button/Button'
-import styles from './index.module.css'
-import { Title } from '../../../components/Title'
-import { useUUIDStore } from '../../../store/useUUIDStore'
-import { Avatar } from '../../../components/Avatar'
+import { useEffect, type FC, type ReactNode } from "react";
+import styles from "./index.module.css";
+// import { Chat } from "../../../components/Chat";
+// import { People } from "../../../components/People";
+import { useParticipantsStore } from "../../../store/useParticipantsStore";
+import { copyStringToClipboard } from "../../../libs/copyStringToClipboard";
+import { useGameStatusStore } from "../../../store";
+import { Copy } from "../../../components/icons/Copy";
 
-export const Container: FC = () => {
-  const userIconId = useUUIDStore(state => state.uuid)
-  const generateUUID = useUUIDStore(state => state.updateUUID)
+type Props = {
+  children: ReactNode;
+};
+
+export const WaitingContainer: FC<Props> = ({ children }) => {
+  //   const participants = useParticipantsStore((state) => state.participants);
+  const meta = useGameStatusStore((state) => state.meta);
+  const url = `${location.protocol}://${location.hostname}/game/?type=enter_room&id=${meta.roomId}`;
+  const addParticipant = useParticipantsStore((state) => state.addParticipant);
+  useEffect(() => {
+    addParticipant({ name: "hoge", icon: "test", id: "888", score: 0 });
+  }, []);
   return (
     <main className={styles.container}>
-      <div className={styles.titleContainer}>
-        <Title>
-          chat
-          <br />
-          wolf
-        </Title>
+      {/* <Chat />
+      <div className={styles.peopleContainer}>
+        <People participants={participants} />
+      </div> */}
+      <div
+        className={styles.linkContainer}
+        onClick={() => copyStringToClipboard(url)}
+      >
+        <div className={styles.linkText}>招待リンクをコピー</div>
+        <Copy color="black" size={35} />
       </div>
-      <div className={styles.buttonContainer}>
-        <Button>ルーム作成</Button>
-        <Button>ルーム入室</Button>
-        <button onClick={() => generateUUID()}>hoge</button>
-        {userIconId}
-        <Avatar size={100} color='red' name={userIconId} />
-      </div>
+      {children}
     </main>
-  )
-}
+  );
+};

@@ -21,11 +21,11 @@
     position: relative;
     /* display: none; */
 opacity: 0;
-    right: 350px;
+    right: 90vw;
 }
 
 .container.active{
-transform: translateX(350px)
+transform: translateX(90vw)
 }
 
 .container.active .contentsContainer{
