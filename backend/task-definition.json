@@ -16,6 +16,14 @@
           "appProtocol": "http"
         }
       ],
+      "healthCheck": {
+        "protocol": "HTTP",
+        "path": "/",
+        "port": 8080,
+        "interval": 30,
+        "timeout": 5,
+        "retries": 3
+      },
       "essential": true,
       "environment": [],
       "environmentFiles": [],
