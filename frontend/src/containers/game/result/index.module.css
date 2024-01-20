@@ -1,0 +1,39 @@
+.buttonContainer {
+  display: flex;
+  flex-direction: column;
+
+  gap: 10px;
+  text-align: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.titleContainer {
+  text-align: center;
+  justify-content: center;
+  margin: 0 auto;
+  z-index: 5;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 30px;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgb(0, 79, 176);
+}
+
+.container::after {
+  position: fixed;
+  top: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  content: "";
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background-color: yellow;
+  box-shadow: 5px 5px 50px yellow;
+}

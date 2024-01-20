@@ -1,5 +1,5 @@
 export type Protocol = {
-  eventType: string
+  eventType: EventType
   user?: User
   room?: Room
   chatText?: string
@@ -7,6 +7,23 @@ export type Protocol = {
   timeNow?: string
   win?: Role
   users?: User[]
+}
+
+export enum EventType {
+  createRoom = 'create_room',
+  enterRoom = 'enter_room',
+  changeRoomOwner = 'change_room_owner',
+  exitRoom = 'exit_room',
+  sendChat = 'send_chat',
+  setOption = 'set_option',
+  startGame = 'start_game',
+  sendTime = 'send_time',
+  askQuestion = 'ask_question',
+  endQandA = 'end_Q_and_A',
+  giveAnswer = 'give_answer',
+  vote = 'vote',
+  gameResult = 'game_result',
+  prepareCompletion = 'prepare_completion',
 }
 
 export type User = {

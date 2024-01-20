@@ -1,4 +1,4 @@
-import type { Protocol } from '../common'
+import type { EventType, Protocol } from '../common'
 
 export const transferCommonSchema = (jsonString: string): Protocol => {
   const rawData: RawProtocol = JSON.parse(jsonString)
@@ -18,7 +18,7 @@ export const transferCommonSchema = (jsonString: string): Protocol => {
 }
 
 type RawProtocol = {
-  event_type: string
+  event_type: EventType
   user?: User
   room?: Room
   chat_text?: string

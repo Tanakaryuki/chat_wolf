@@ -8,4 +8,4 @@ RUN go mod download && go mod verify
 
 
 CMD ["go", "run", "."]
-EXPOSE 8080
+EXPOSE 80

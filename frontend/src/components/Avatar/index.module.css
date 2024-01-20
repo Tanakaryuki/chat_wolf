@@ -1,0 +1,8 @@
+.iconContainer {
+  /* display: flex;
+  flex-direction: column; */
+  border-radius: 50%;
+  /* margin: 0 auto; */
+  text-align: center;
+  justify-content: center;
+}
