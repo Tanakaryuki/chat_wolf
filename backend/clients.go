@@ -122,10 +122,10 @@ func (c *Client) writePump() {
 }
 
 // serveWs handles websocket requests from the peer.
-func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
-	conn, err := upgrader.Upgrade(w, r, nil)
+func ServeWs(hub *Hub, c echo.Context) {
+	conn, err := upgrader.Upgrade(c.Response(), c.Request(), nil) //c.Response().Writerになる可能性あり
 	if err != nil {
-		log.Println(err)
+		c.Logger().Error(err)
 		return
 	}
 	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256)}
@@ -138,7 +138,7 @@ func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 }
 
 func Hello(c echo.Context) error {
-	ws, err := upgrader.Upgrade(c.Response(), c.Request(), nil)
+	ws, err := upgrader.Upgrade(c.Response(), c.Request(), nil) //c.Response().Writerになる可能性あり
 	if err != nil {
 		return err
 	}

@@ -9,6 +9,7 @@ import (
 	"github.com/Tanakaryuki/chat_wolf/utils/config"
 
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"github.com/redis/go-redis/v9"
 )
 
@@ -27,6 +28,11 @@ func setupRedis() {
 func main() {
 	e := echo.New()
 
+	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
+		Format: "time=${time_rfc3339_nano}, method=${method}, uri=${uri}, status=${status}\n",
+	}))
+	e.Use(middleware.CORS())
+
 	config.LoadEnv()
 
 	setupRedis()
@@ -43,7 +49,7 @@ func main() {
 		return c.String(http.StatusOK, "Hello, World!")
 	})
 	e.GET("/ws", func(c echo.Context) error {
-		ServeWs(hub, c.Response().Writer, c.Request())
+		ServeWs(hub, c)
 		return nil
 	})
 	e.GET("/hello", Hello) //WebSocketテスト用
