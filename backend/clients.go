@@ -125,7 +125,7 @@ func (c *Client) writePump() {
 func ServeWs(hub *Hub, c echo.Context) {
 	conn, err := upgrader.Upgrade(c.Response(), c.Request(), nil)
 	if err != nil {
-		log.Println(err)
+		c.Logger().Error(err)
 		return
 	}
 	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256)}
