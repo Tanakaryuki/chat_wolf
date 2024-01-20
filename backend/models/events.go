@@ -80,8 +80,8 @@ type UserForRedis struct {
 }
 
 type RoomForRedis struct {
-	RoomOwnerID string `json:"room_owner_id,omitempty"`
-	VoteEnded   bool   `json:"vote_ended,omitempty"`
+	RoomOwnerID string `json:"room_owner_id"`
+	VoteEnded   bool   `json:"vote_ended"`
 }
 
 type UserForChatLog struct {
