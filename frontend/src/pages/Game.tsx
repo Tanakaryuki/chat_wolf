@@ -3,12 +3,12 @@ import { Hamburger } from "../components/Hamburger/Hamburger";
 import { Container } from "../containers/top";
 import ReconnectingWebSocket from "reconnecting-websocket";
 // import { transferMessage } from "../libs/webSocket";
-import { Protocol } from "../schema/common";
-import { SwitchingHub } from "../containers/game/SwitchingHub";
+// import { Protocol } from "../schema/common";
+// import { SwitchingHub } from "../containers/game/SwitchingHub";
 
 export const Game = () => {
   const [message, setMessage] = useState<string>();
-  const [schema, setSchema] = useState<Protocol>();
+  //   const [schema, setSchema] = useState<Protocol>();
   const socketRef = useRef<ReconnectingWebSocket>();
 
   useEffect(() => {
@@ -32,7 +32,7 @@ export const Game = () => {
   return (
     <>
       <Hamburger />
-      {SwitchingHub(schema)}
+      {/* {SwitchingHub(schema)} */}
       <button
         type="button"
         onClick={() => {

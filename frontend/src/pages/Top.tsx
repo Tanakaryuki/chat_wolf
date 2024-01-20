@@ -1,7 +1,7 @@
 import { Wolf } from "../components/Card/Wolf";
 import { Chat } from "../components/Chat";
 import { Contents } from "../components/Chat/Contents";
-import { Tab } from "../components/Chat/Tab";
+// import { Tab } from "../components/Chat/Tab";
 import { Hamburger } from "../components/Hamburger/Hamburger";
 import { Human } from "../components/Human";
 import { Player } from "../components/Player";
