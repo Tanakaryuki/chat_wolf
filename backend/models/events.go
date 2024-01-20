@@ -106,8 +106,8 @@ type ChatLog struct {
 }
 
 type SetData struct {
-	User    []UserForRedis
-	ChatLog []ChatLog
-	Room    RoomForRedis
-	Option  Option
+	User    []UserForRedis `json:"user"`
+	ChatLog []ChatLog      `json:"chat_log"`
+	Room    RoomForRedis   `json:"room"`
+	Option  Option         `json:"option"`
 }
