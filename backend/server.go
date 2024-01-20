@@ -9,6 +9,7 @@ import (
 	"github.com/Tanakaryuki/chat_wolf/utils/config"
 
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"github.com/redis/go-redis/v9"
 )
 
@@ -26,6 +27,11 @@ func setupRedis() {
 
 func main() {
 	e := echo.New()
+
+	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
+		Format: "time=${time_rfc3339_nano}, method=${method}, uri=${uri}, status=${status}\n",
+	}))
+	e.Use(middleware.CORS())
 
 	config.LoadEnv()
 
