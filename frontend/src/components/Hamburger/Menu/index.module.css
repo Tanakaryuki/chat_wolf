@@ -1,0 +1,30 @@
+.container {
+    display: flex;
+    width: 60vw;
+    height: 30vh;
+    background-color: white;
+    border-radius: 10px;
+}
+
+.button {
+    position: relative;
+    left: 35px;
+    bottom: 35px;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+}
+
+.avatar{
+    padding-top: 5px;
+}
+
+.nameInput {
+    outline: none;
+    border: none;
+    border-bottom: 1px solid #c2c2c2;
+    font-size: 25px;
+    width: 150px;
+    margin-left: 20px;
+    margin-top: 20px;
+}
