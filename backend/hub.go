@@ -1,16 +1,24 @@
 package main
 
+import (
+	"math/rand"
+	"strconv"
+)
+
+var RoomID int = 10000
+
 // Hub maintains the set of active clients and broadcasts messages to the
 // clients.
 type Hub struct {
 	// Registered clients.
-	clients map[*Client]bool
+	clients map[string]map[*Client]bool
 
 	// Inbound messages from the clients.
 	broadcast chan []byte
 
 	// Register requests from the clients.
-	register chan *Client
+	createRoom chan *Client
+	enterRoom  chan *Client
 
 	// Unregister requests from clients.
 	unregister chan *Client
@@ -19,15 +27,20 @@ type Hub struct {
 func NewHub() *Hub {
 	return &Hub{
 		broadcast:  make(chan []byte),
-		register:   make(chan *Client),
+		enterRoom:  make(chan *Client),
+		createRoom: make(chan *Client),
 		unregister: make(chan *Client),
-		clients:    make(map[*Client]bool),
+		clients:    make(map[string]map[*Client]bool),
 	}
 }
 
 func (h *Hub) run() {
 	for {
 		select {
+		case client := <-h.createRoom:
+			RoomID += rand.Intn(20)
+			roomnum := strconv.Itoa(RoomID)
+			h.clients[roomnum][client] = true
 		case client := <-h.register:
 			h.clients[client] = true
 		case client := <-h.unregister:

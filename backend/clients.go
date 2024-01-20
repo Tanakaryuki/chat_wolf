@@ -1,12 +1,12 @@
 package main
 
 import (
-	"bytes"
 	"fmt"
 	"log"
 	"net/http"
 	"time"
 
+	"github.com/Tanakaryuki/chat_wolf/models"
 	"github.com/gorilla/websocket"
 	"github.com/labstack/echo/v4"
 )
@@ -63,15 +63,32 @@ func (c *Client) readPump() {
 	c.conn.SetReadDeadline(time.Now().Add(pongWait))
 	c.conn.SetPongHandler(func(string) error { c.conn.SetReadDeadline(time.Now().Add(pongWait)); return nil })
 	for {
-		_, message, err := c.conn.ReadMessage()
+		var message models.Protocol
+		err := c.conn.ReadJSON(&message)
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
 				log.Printf("error: %v", err)
 			}
 			break
 		}
-		message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
-		c.hub.broadcast <- message
+		switch message.EventType {
+		case models.CreateRoom:
+			c.hub.createRoom <- c
+		case models.EnterRoom:
+
+		case models.ChangeRoomOwner:
+		case models.ExitRoom:
+		case models.SendChat:
+		case models.SetOption:
+		case models.StartGame:
+		case models.SendTime:
+		case models.AskQuestion:
+		case models.EndQandA:
+		case models.GiveAnswer:
+		case models.VoteEvent:
+		case models.GameResult:
+		case models.PrepareCompletion:
+		}
 	}
 }
 
@@ -129,7 +146,6 @@ func ServeWs(hub *Hub, c echo.Context) {
 		return
 	}
 	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256)}
-	client.hub.register <- client
 
 	// Allow collection of memory referenced by the caller by doing all work in
 	// new goroutines.
