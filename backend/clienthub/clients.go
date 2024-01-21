@@ -96,11 +96,9 @@ func (c *Client) readPump(logger echo.Logger) {
 			c.Hub.startGame <- cp
 		case models.AskQuestion:
 			c.Hub.askQuestion <- cp
-		case models.EndQandA:
-		case models.GiveAnswer:
 		case models.VoteEvent:
+			c.Hub.voteEvent <- cp
 		case models.GameResult:
-		case models.PrepareCompletion:
 		default:
 			logger.Error("This is Called")
 		}
