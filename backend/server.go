@@ -43,6 +43,6 @@ func main() {
 		clienthub.ServeWs(hub, c)
 		return nil
 	})
-	e.GET("/hello", Hello) //WebSocketテスト用
+	e.GET("/hello", clienthub.Hello) //WebSocketテスト用
 	e.Logger.Fatal(e.Start(":80"))
 }
