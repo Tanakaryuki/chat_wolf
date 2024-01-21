@@ -87,8 +87,6 @@ func (c *Client) readPump(logger echo.Logger) {
 			c.Hub.createRoom <- cp
 		case models.EnterRoom:
 			c.Hub.enterRoom <- cp
-		case models.ChangeRoomOwner:
-		case models.ExitRoom:
 		case models.SendChat:
 			c.Hub.sendChat <- cp
 		case models.SetOption:

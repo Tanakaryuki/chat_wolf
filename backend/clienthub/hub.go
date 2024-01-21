@@ -86,6 +86,7 @@ func NewHub(logger echo.Logger) *Hub {
 		broadcast:   make(chan *models.Broadcast),
 		enterRoom:   make(chan *ClientPrtocol),
 		createRoom:  make(chan *ClientPrtocol),
+		sendChat:    make(chan *ClientPrtocol),
 		startGame:   make(chan *ClientPrtocol),
 		askQuestion: make(chan *ClientPrtocol),
 		voteEvent:   make(chan *ClientPrtocol),
@@ -174,6 +175,7 @@ func (h *Hub) Run() {
 			}
 			h.Broadcast(client.Protocol.Room.RoomID, data)
 		case client := <-h.sendChat:
+			h.logger.Error("call sendchat")
 			getData, err := redis.Get(client.Protocol.Room.RoomID)
 			if err != nil {
 				h.logger.Error(err)
@@ -205,6 +207,7 @@ func (h *Hub) Run() {
 				h.logger.Error(err)
 				break
 			}
+			h.logger.Error("call broadcast")
 			h.Broadcast(client.Protocol.Room.RoomID, data)
 		case client := <-h.startGame:
 			roomID := client.Protocol.Room.RoomID
