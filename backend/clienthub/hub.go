@@ -181,8 +181,8 @@ func (h *Hub) Run() {
 				h.logger.Error(err)
 				break
 			}
-			var setData *models.SetData
-			err = json.Unmarshal(getData, setData)
+			var setData models.SetData
+			err = json.Unmarshal(getData, &setData)
 			if err != nil {
 				h.logger.Error(err)
 				break
