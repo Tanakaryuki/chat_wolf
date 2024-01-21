@@ -118,7 +118,6 @@ func (h *Hub) Run() {
 				h.logger.Error(err)
 				break
 			}
-			h.logger.Error("start broadcast")
 			h.Broadcast(roomnum, data)
 		case client := <-h.enterRoom:
 			getData, err := redis.Get(client.Protocol.Room.RoomID)
@@ -132,7 +131,6 @@ func (h *Hub) Run() {
 				h.logger.Error(err)
 				break
 			}
-			h.logger.Error(setData.User)
 			if len(setData.User) >= 7 {
 				setData.User = append(setData.User, models.UserForRedis{
 					ID:            client.Protocol.User.ID,
@@ -235,7 +233,6 @@ func (h *Hub) Run() {
 
 			}(roomID)
 		case client := <-h.askQuestion:
-			h.logger.Error("call askQuestion")
 			_, err := redis.Get(client.Protocol.Room.RoomID)
 			if err != nil {
 				h.logger.Error(err)
