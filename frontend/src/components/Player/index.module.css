@@ -1,0 +1,26 @@
+.container{
+    display: flex;
+    flex-direction: column;
+    width: 130px;
+    text-align: center;
+    gap:5px;
+}
+
+.nameContainer{
+    display: flex;
+    justify-content: space-evenly;
+
+}
+
+.name {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    justify-content: center;
+    height: 40px;
+    padding-top: 2px;
+    margin-left: 2px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}

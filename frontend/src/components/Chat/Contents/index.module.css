@@ -1,0 +1,19 @@
+.container {
+  width: 100vw;
+  height: 90vh;
+  margin: 0 auto;
+  background-color: #40e300bb;
+  padding-top: 15px;
+}
+
+.messagesContainer {
+    height: 80vh;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+.formContainer {
+    background-color: white;
+    height: 10vh;
+    padding:15px;
+}

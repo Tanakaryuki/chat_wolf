@@ -1,25 +1,44 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(to bottom, rgb(1, 35, 78), rgb(0, 100, 200));
+  flex-grow: 1;
+}
+
 .buttonContainer {
+
   display: flex;
   flex-direction: column;
 
-  gap: 10px;
+  gap: 20px;
   text-align: center;
   justify-content: center;
   margin: 0 auto;
 }
 
 .titleContainer {
-  text-align: center;
-  justify-content: center;
-  margin: 0 auto;
+    height: 500px;
+    text-align: center;
+    justify-content: center;
+    margin: 0 auto;
+    /* margin-top: -100px; */
+  z-index: 5;
 }
 
-.container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 30px;
-  width: 100vw;
-  height: 100vh;
-  background-color: aquamarine;
+
+.container::after {
+  position: fixed;
+  top: 150px;
+  left: 50%;
+  transform: translateX(-50%);
+  content: "";
+  width: 350px;
+  height: 350px;
+  border-radius: 50%;
+  background-color: yellow;
+  box-shadow: 5px 5px 50px yellow;
 }

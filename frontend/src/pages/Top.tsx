@@ -1,5 +1,5 @@
-import { Hamburger } from '../components/Hamburger/Hamburger'
-import { Container } from '../containers/top'
+import { Hamburger } from "../components/Hamburger/Hamburger";
+import { Container } from "../containers/top";
 
 export const Top = () => {
   return (
@@ -7,5 +7,5 @@ export const Top = () => {
       <Hamburger />
       <Container />
     </>
-  )
-}
+  );
+};

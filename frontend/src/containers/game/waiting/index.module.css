@@ -1,0 +1,51 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(to bottom, rgb(1, 35, 78), rgb(0, 100, 200));
+  flex-grow: 1;
+}
+
+.container::after {
+  position: fixed;
+  top: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  content: "";
+  width: 350px;
+  height: 350px;
+  border-radius: 50%;
+  background-color: yellow;
+  box-shadow: 5px 5px 50px yellow;
+}
+
+.peopleContainer{
+  position: absolute;
+  bottom:50px;
+  left: 50%;
+  margin: 0 auto;
+  transform: translate(-50%, 0);
+
+}
+
+.linkContainer{
+  display: flex;
+  width:250px;
+  left: 50%;
+  bottom:20px;
+  justify-content: center;
+  gap:10px;
+  position: absolute;
+  margin: 0 auto;
+  text-align: center;
+  transform: translate(-50%, 0);
+}
+
+.linkText{
+  font-size: 18px;
+  font-weight: 900;
+  margin-top:5px ;
+}

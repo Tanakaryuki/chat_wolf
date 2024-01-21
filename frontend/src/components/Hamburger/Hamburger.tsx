@@ -1,15 +1,16 @@
-import styles from './index.module.css'
-import { useState } from 'react'
-import Popup from 'reactjs-popup'
+import styles from "./index.module.css";
+import { useState } from "react";
+import Popup from "reactjs-popup";
+import { Menu } from "./Menu";
 
 export const Hamburger = () => {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
   return (
     <div className={styles.container}>
       <Popup
         trigger={
           <div
-            className={`${styles.openbtn8} ${isOpen ? styles.active : ''}`}
+            className={`${styles.openbtn8} ${isOpen ? styles.active : ""}`}
             // onClick={() => setIsOpen(!isOpen)}
           >
             <div className={styles.openbtnArea}>
@@ -21,7 +22,7 @@ export const Hamburger = () => {
         }
         onOpen={() => setIsOpen(true)}
         onClose={() => setIsOpen(false)}
-        position='bottom right'
+        position="bottom right"
 
         // modal
         // nested
@@ -29,15 +30,9 @@ export const Hamburger = () => {
         //   lockScroll={true}
       >
         <>
-          aaa
-          <div className={styles.hoge}>
-            Content here
-            <button>hhhhhh</button>
-            <a className='close'>&times;</a>
-            <div>sssss</div>
-          </div>
+          <Menu />
         </>
       </Popup>
     </div>
-  )
-}
+  );
+};
