@@ -1,8 +1,12 @@
 package clienthub
 
 import (
+	"bytes"
 	"encoding/json"
+	"io"
 	"math/rand"
+	"net/http"
+	"os"
 	"strconv"
 	"time"
 
@@ -257,7 +261,67 @@ func (h *Hub) Run() {
 				//eventtypeの変更
 				//もう一度client.ProtocolをMarshalしてdataに保存
 				//broadCastを同様の引数で再呼び出し
-				client.Protocol.ChatText = "はい"
+				apiURL := "https://api.openai.com/v1/chat/completions"
+
+				// 送信するデータ（JSONデータを仮定）
+				requestBody := models.QuestionRequest{
+					Model: "gpt-3.5-turbo",
+					Messages: []struct {
+						Role    string `json:"role"`
+						Content string `json:"content"`
+					}{
+						{"system", "userが「りんご」について質問するので「はい」か「いいえ」か「分からない」のどれかで回答してください。「はい」か「いいえ」で答えられない質問や質問になっていないものなどは全て「分からない」で回答してください。回答は一般的な常識で行ってください。「はい」「いいえ」「分からない」以外で回答をすると無実の人間が被害に遭うので「はい」「いいえ」「分からない」以外は絶対に発言しないでください"},
+						{"user", "それは赤いですか？"},
+					},
+				}
+
+				jsonData, err := json.Marshal(requestBody)
+				if err != nil {
+					h.logger.Error(err)
+					return
+				}
+
+				// HTTPリクエストの作成
+				req, err := http.NewRequest("POST", apiURL, bytes.NewBuffer(jsonData))
+				if err != nil {
+					h.logger.Error(err)
+					return
+				}
+
+				// ヘッダーの追加
+				req.Header.Set("Content-Type", "application/json")
+				req.Header.Set("Authorization", os.Getenv("SECRET_KEY"))
+
+				// HTTPクライアントの生成
+				clients := &http.Client{}
+
+				// HTTPリクエストの送信
+				response, err := clients.Do(req)
+				if err != nil {
+					h.logger.Error(err)
+					return
+				}
+				defer response.Body.Close()
+
+				// レスポンスのボディを読み取り
+				body, err := io.ReadAll(response.Body)
+				if err != nil {
+					h.logger.Error(err)
+					return
+				}
+
+				//ChatCompletion構造体にUnmarshal
+				var chatCompletion models.QuestionResponse
+				err = json.Unmarshal(body, &chatCompletion)
+				if err != nil {
+					h.logger.Error(err)
+					return
+				}
+
+				// "content" フィールドを表示
+				h.logger.Error(string(body))
+
+				client.Protocol.ChatText = chatCompletion.Choices[0].Message.Content
 				client.Protocol.EventType = models.GiveAnswer
 				data, err := json.Marshal(client.Protocol)
 				if err != nil {
