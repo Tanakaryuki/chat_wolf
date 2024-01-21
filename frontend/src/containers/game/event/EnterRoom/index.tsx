@@ -1,14 +1,38 @@
 import { FC, useEffect } from "react";
 import styles from "./index.module.css";
-import { useParticipantsStore } from "../../../../store/useParticipantsStore";
-import { useNameStore, useUUIDStore } from "../../../../store";
+import {
+  useGameStatusStore,
+  useNameStore,
+  useRefStore,
+  useUUIDStore,
+} from "../../../../store";
+import { commonSchemaToJSON } from "../../../../schema/dto/common";
+import { EventType, Protocol } from "../../../../schema/common";
+// import { Colors } from "../../../../schema/status";
 
 export const EnterRoom: FC = () => {
-  const addParticipant = useParticipantsStore((state) => state.addParticipant);
+  //   const addParticipant = useParticipantsStore((state) => state.addParticipant);
   const name = useNameStore((state) => state.name);
   const uuid = useUUIDStore((state) => state.uuid);
+  const ref = useRefStore((state) => state.socketRef);
+  const roomId = useGameStatusStore((state) => state.meta.roomId);
   useEffect(() => {
-    addParticipant({ name: name, icon: uuid, id: uuid, score: 0 });
+    const data: Protocol = {
+      eventType: EventType.enterRoom,
+      user: {
+        id: uuid,
+        displayName: name,
+        icon: uuid,
+        isParticipant: true,
+      },
+      room: {
+        roomId: roomId,
+      },
+    };
+    const dataString = commonSchemaToJSON(data);
+    ref?.current?.send(dataString);
+    console.log("まじ？");
   }, []);
+
   return <div className={styles.container}></div>;
 };

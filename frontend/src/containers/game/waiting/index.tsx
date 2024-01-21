@@ -1,11 +1,12 @@
-import { useEffect, type FC, type ReactNode } from "react";
+import { type FC, type ReactNode } from "react";
 import styles from "./index.module.css";
 // import { Chat } from "../../../components/Chat";
 // import { People } from "../../../components/People";
-import { useParticipantsStore } from "../../../store/useParticipantsStore";
+// import { useParticipantsStore } from "../../../store/useParticipantsStore";
 import { copyStringToClipboard } from "../../../libs/copyStringToClipboard";
 import { useGameStatusStore } from "../../../store";
 import { Copy } from "../../../components/icons/Copy";
+// import { Colors } from "../../../schema/status";
 
 type Props = {
   children: ReactNode;
@@ -14,11 +15,17 @@ type Props = {
 export const WaitingContainer: FC<Props> = ({ children }) => {
   //   const participants = useParticipantsStore((state) => state.participants);
   const meta = useGameStatusStore((state) => state.meta);
-  const url = `${location.protocol}://${location.hostname}/game/?type=enter_room&id=${meta.roomId}`;
-  const addParticipant = useParticipantsStore((state) => state.addParticipant);
-  useEffect(() => {
-    addParticipant({ name: "hoge", icon: "test", id: "888", score: 0 });
-  }, []);
+  const url = `${location.protocol}://${location.hostname}:${location.port}/game/?type=enter_room&id=${meta.roomId}`;
+  //   const addParticipant = useParticipantsStore((state) => state.addParticipant);
+  //   useEffect(() => {
+  //     addParticipant({
+  //       name: "hoge",
+  //       icon: "test",
+  //       id: "888",
+  //       score: 0,
+  //       color: Colors.green,
+  //     });
+  //   }, []);
   return (
     <main className={styles.container}>
       {/* <Chat />

@@ -34,7 +34,7 @@ export type User = {
   isWolf?: boolean;
   score?: number;
   word?: string;
-  isParticipant?: string;
+  isParticipant?: boolean;
   vote?: {
     id?: string;
     displayName?: string;
@@ -48,10 +48,10 @@ export type Room = {
 };
 
 export type Option = {
-  turnNum?: string;
-  discussTime?: string;
-  voteTime?: string;
-  participantsNum?: string;
+  turnNum?: number;
+  discussTime?: number;
+  voteTime?: number;
+  participantsNum?: number;
 };
 
 export enum Role {

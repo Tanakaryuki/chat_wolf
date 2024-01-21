@@ -5,6 +5,7 @@ import { useParticipantsStore } from "../../store/useParticipantsStore";
 import styles from "./index.module.css";
 import { Chat } from "../../components/Chat";
 import { People } from "../../components/People";
+import { Log } from "../../components/Chat/Log";
 
 // type Props = {
 //   schema: Protocol;
@@ -17,6 +18,7 @@ export const GameContainer: FC = () => {
   return (
     <main>
       <Chat />
+      <Log />
       <div className={styles.peopleContainer}>
         <People participants={participants} />
       </div>

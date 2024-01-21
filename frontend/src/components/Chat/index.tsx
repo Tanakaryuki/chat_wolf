@@ -4,7 +4,6 @@ export const Chat = () => {
   return (
     <>
       <Tab />
-      {/* <Contents /> */}
     </>
   );
 };
