@@ -1,12 +1,11 @@
-package main
+package clienthub
 
 import (
-	"bytes"
 	"fmt"
-	"log"
 	"net/http"
 	"time"
 
+	"github.com/Tanakaryuki/chat_wolf/models"
 	"github.com/gorilla/websocket"
 	"github.com/labstack/echo/v4"
 )
@@ -22,17 +21,17 @@ const (
 	pingPeriod = (pongWait * 9) / 10
 
 	// Maximum message size allowed from peer.
-	maxMessageSize = 512
+	maxMessageSize = 4096
 )
 
 var (
 	newline = []byte{'\n'}
-	space   = []byte{' '}
+	// space  = []byte{' '}
 )
 
 var upgrader = websocket.Upgrader{
-	ReadBufferSize:  1024,
-	WriteBufferSize: 1024,
+	ReadBufferSize:  4096,
+	WriteBufferSize: 4096,
 	CheckOrigin: func(r *http.Request) bool {
 		return true
 	},
@@ -40,13 +39,18 @@ var upgrader = websocket.Upgrader{
 
 // Client is a middleman between the websocket connection and the hub.
 type Client struct {
-	hub *Hub
+	Hub *Hub
 
 	// The websocket connection.
-	conn *websocket.Conn
+	Conn *websocket.Conn
 
 	// Buffered channel of outbound messages.
-	send chan []byte
+	Send chan []byte
+}
+
+type ClientPrtocol struct {
+	Client   Client
+	Protocol models.Protocol
 }
 
 // readPump pumps messages from the websocket connection to the hub.
@@ -54,24 +58,52 @@ type Client struct {
 // The application runs readPump in a per-connection goroutine. The application
 // ensures that there is at most one reader on a connection by executing all
 // reads from this goroutine.
-func (c *Client) readPump() {
+func (c *Client) readPump(logger echo.Logger) {
 	defer func() {
-		c.hub.unregister <- c
-		c.conn.Close()
+		c.Hub.unregister <- c
+		c.Conn.Close()
 	}()
-	c.conn.SetReadLimit(maxMessageSize)
-	c.conn.SetReadDeadline(time.Now().Add(pongWait))
-	c.conn.SetPongHandler(func(string) error { c.conn.SetReadDeadline(time.Now().Add(pongWait)); return nil })
+	c.Conn.SetReadLimit(maxMessageSize)
+	c.Conn.SetReadDeadline(time.Now().Add(pongWait))
+	c.Conn.SetPongHandler(func(string) error { c.Conn.SetReadDeadline(time.Now().Add(pongWait)); return nil })
 	for {
-		_, message, err := c.conn.ReadMessage()
+		var message models.Protocol
+		err := c.Conn.ReadJSON(&message)
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
-				log.Printf("error: %v", err)
+				logger.Error("error: %v", err)
 			}
+			logger.Error(err)
 			break
 		}
-		message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
-		c.hub.broadcast <- message
+		logger.Error("start switch statment")
+		cp := &ClientPrtocol{
+			Client:   *c,
+			Protocol: message,
+		}
+		logger.Error(cp)
+		switch message.EventType {
+		case models.CreateRoom:
+			c.Hub.createRoom <- cp
+		case models.EnterRoom:
+			c.Hub.enterRoom <- cp
+		case models.ChangeRoomOwner:
+		case models.ExitRoom:
+		case models.SendChat:
+			c.Hub.sendChat <- cp
+		case models.SetOption:
+		case models.StartGame:
+			c.Hub.startGame <- cp
+		case models.AskQuestion:
+			c.Hub.askQuestion <- cp
+		case models.EndQandA:
+		case models.GiveAnswer:
+		case models.VoteEvent:
+		case models.GameResult:
+		case models.PrepareCompletion:
+		default:
+			logger.Error("This is Called")
+		}
 	}
 }
 
@@ -80,41 +112,45 @@ func (c *Client) readPump() {
 // A goroutine running writePump is started for each connection. The
 // application ensures that there is at most one writer to a connection by
 // executing all writes from this goroutine.
-func (c *Client) writePump() {
+func (c *Client) writePump(logger echo.Logger) {
 	ticker := time.NewTicker(pingPeriod)
 	defer func() {
 		ticker.Stop()
-		c.conn.Close()
+		c.Conn.Close()
 	}()
 	for {
 		select {
-		case message, ok := <-c.send:
-			c.conn.SetWriteDeadline(time.Now().Add(writeWait))
+		case message, ok := <-c.Send:
+			c.Conn.SetWriteDeadline(time.Now().Add(writeWait))
 			if !ok {
 				// The hub closed the channel.
-				c.conn.WriteMessage(websocket.CloseMessage, []byte{})
+				logger.Error("c.Send not ok")
+				c.Conn.WriteMessage(websocket.CloseMessage, []byte{})
 				return
 			}
 
-			w, err := c.conn.NextWriter(websocket.TextMessage)
+			w, err := c.Conn.NextWriter(websocket.TextMessage)
 			if err != nil {
+				logger.Error(err)
 				return
 			}
 			w.Write(message)
 
 			// Add queued chat messages to the current websocket message.
-			n := len(c.send)
+			n := len(c.Send)
 			for i := 0; i < n; i++ {
 				w.Write(newline)
-				w.Write(<-c.send)
+				w.Write(<-c.Send)
 			}
 
 			if err := w.Close(); err != nil {
+				logger.Error(err)
 				return
 			}
 		case <-ticker.C:
-			c.conn.SetWriteDeadline(time.Now().Add(writeWait))
-			if err := c.conn.WriteMessage(websocket.PingMessage, nil); err != nil {
+			c.Conn.SetWriteDeadline(time.Now().Add(writeWait))
+			if err := c.Conn.WriteMessage(websocket.PingMessage, nil); err != nil {
+				logger.Error(err)
 				return
 			}
 		}
@@ -128,13 +164,12 @@ func ServeWs(hub *Hub, c echo.Context) {
 		c.Logger().Error(err)
 		return
 	}
-	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256)}
-	client.hub.register <- client
+	client := &Client{Hub: hub, Conn: conn, Send: make(chan []byte, 256)}
 
 	// Allow collection of memory referenced by the caller by doing all work in
 	// new goroutines.
-	go client.writePump()
-	go client.readPump()
+	go client.writePump(c.Logger())
+	go client.readPump(c.Logger())
 }
 
 func Hello(c echo.Context) error {
