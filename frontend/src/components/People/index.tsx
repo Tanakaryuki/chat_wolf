@@ -16,18 +16,21 @@ export const People: FC<Props> = ({ participants }) => {
     "#2986E8",
     "#954EDC",
   ];
+
   return (
     <div className={styles.container}>
       {participants.map((e, i) => {
         return (
           <>
             {i < 6 && (
-              <Player
-                key={e.id}
-                name={e.name}
-                uuid={e.icon}
-                color={colors[i]}
-              />
+              <div className="">
+                <Player
+                  key={e.id}
+                  name={e.name}
+                  uuid={e.icon}
+                  color={colors[i]}
+                />
+              </div>
             )}
           </>
         );

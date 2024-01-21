@@ -1,6 +1,5 @@
 import { FC, useEffect } from "react";
 import styles from "./index.module.css";
-import { useParticipantsStore } from "../../../../store/useParticipantsStore";
 import {
   useGameStatusStore,
   useNameStore,
@@ -9,22 +8,15 @@ import {
 } from "../../../../store";
 import { commonSchemaToJSON } from "../../../../schema/dto/common";
 import { EventType, Protocol } from "../../../../schema/common";
-import { Colors } from "../../../../schema/status";
+// import { Colors } from "../../../../schema/status";
 
 export const EnterRoom: FC = () => {
-  const addParticipant = useParticipantsStore((state) => state.addParticipant);
+  //   const addParticipant = useParticipantsStore((state) => state.addParticipant);
   const name = useNameStore((state) => state.name);
   const uuid = useUUIDStore((state) => state.uuid);
   const ref = useRefStore((state) => state.socketRef);
   const roomId = useGameStatusStore((state) => state.meta.roomId);
   useEffect(() => {
-    addParticipant({
-      name: name,
-      icon: uuid,
-      id: uuid,
-      score: 0,
-      color: Colors.lightBlue,
-    });
     const data: Protocol = {
       eventType: EventType.enterRoom,
       user: {
@@ -35,12 +27,6 @@ export const EnterRoom: FC = () => {
       },
       room: {
         roomId: roomId,
-      },
-      option: {
-        turnNum: 5,
-        discussTime: 180,
-        voteTime: 60,
-        participantsNum: 6,
       },
     };
     const dataString = commonSchemaToJSON(data);
