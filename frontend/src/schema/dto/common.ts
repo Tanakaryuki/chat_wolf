@@ -81,7 +81,7 @@ type User = {
   is_wolf?: boolean;
   score?: number;
   word?: string;
-  is_participant?: string;
+  is_participant?: boolean;
   vote?: {
     id?: string;
     display_name?: string;
@@ -95,10 +95,10 @@ type Room = {
 };
 
 type Option = {
-  turn_num?: string;
-  discuss_time?: string;
-  vote_time?: string;
-  participants_num?: string;
+  turn_num?: number;
+  discuss_time?: number;
+  vote_time?: number;
+  participants_num?: number;
 };
 
 enum Role {
