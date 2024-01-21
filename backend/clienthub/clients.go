@@ -96,8 +96,8 @@ func (c *Client) readPump(logger echo.Logger) {
 		case models.SetOption:
 		case models.StartGame:
 			c.Hub.startGame <- cp
-		case models.SendTime:
 		case models.AskQuestion:
+			c.Hub.askQuestion <- cp
 		case models.EndQandA:
 		case models.GiveAnswer:
 		case models.VoteEvent:

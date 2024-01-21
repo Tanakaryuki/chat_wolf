@@ -27,10 +27,11 @@ type Hub struct {
 	broadcast chan *models.Broadcast
 
 	// Register requests from the clients.
-	createRoom chan *ClientPrtocol
-	enterRoom  chan *ClientPrtocol
-	sendChat   chan *ClientPrtocol
-	startGame  chan *ClientPrtocol
+	createRoom  chan *ClientPrtocol
+	enterRoom   chan *ClientPrtocol
+	sendChat    chan *ClientPrtocol
+	startGame   chan *ClientPrtocol
+	askQuestion chan *ClientPrtocol
 
 	// Unregister requests from clients.
 	unregister chan *Client
@@ -81,13 +82,14 @@ func InitSetDataFromProtocol(ClientPrtocol *ClientPrtocol) models.SetData {
 
 func NewHub(logger echo.Logger) *Hub {
 	return &Hub{
-		broadcast:  make(chan *models.Broadcast),
-		enterRoom:  make(chan *ClientPrtocol),
-		createRoom: make(chan *ClientPrtocol),
-		startGame:  make(chan *ClientPrtocol),
-		unregister: make(chan *Client),
-		clients:    make(map[string]map[*Client]bool),
-		logger:     logger,
+		broadcast:   make(chan *models.Broadcast),
+		enterRoom:   make(chan *ClientPrtocol),
+		createRoom:  make(chan *ClientPrtocol),
+		startGame:   make(chan *ClientPrtocol),
+		askQuestion: make(chan *ClientPrtocol),
+		unregister:  make(chan *Client),
+		clients:     make(map[string]map[*Client]bool),
+		logger:      logger,
 	}
 }
 
@@ -232,6 +234,33 @@ func (h *Hub) Run() {
 				}
 
 			}(roomID)
+		case client := <-h.askQuestion:
+			h.logger.Error("call askQuestion")
+			_, err := redis.Get(client.Protocol.Room.RoomID)
+			if err != nil {
+				h.logger.Error(err)
+				break
+			}
+			data, err := json.Marshal(client.Protocol)
+			if err != nil {
+				h.logger.Error(err)
+				break
+			}
+			h.Broadcast(client.Protocol.Room.RoomID, data)
+			go func(client *ClientPrtocol) {
+				//GPTに質問送信→質問が帰ってくる
+				//質問をclient.ProtocolのchatTextに上書き
+				//eventtypeの変更
+				//もう一度client.ProtocolをMarshalしてdataに保存
+				//broadCastを同様の引数で再呼び出し
+				client.Protocol.ChatText = "はい"
+				client.Protocol.EventType = models.GiveAnswer
+				data, err := json.Marshal(client.Protocol)
+				if err != nil {
+					h.logger.Error(err)
+				}
+				h.Broadcast(client.Protocol.Room.RoomID, data)
+			}(client)
 		case broadcast := <-h.broadcast:
 			for client := range h.clients[broadcast.RoomNum] {
 				select {
