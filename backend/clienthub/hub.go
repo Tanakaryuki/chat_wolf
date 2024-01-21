@@ -127,6 +127,7 @@ func (h *Hub) Run() {
 				h.logger.Error(err)
 				break
 			}
+			h.clients[client.Protocol.Room.RoomID][&client.Client] = true
 			var setData models.SetData
 			err = json.Unmarshal(getData, &setData)
 			if err != nil {
@@ -141,14 +142,15 @@ func (h *Hub) Run() {
 					Icon:          client.Protocol.User.Icon,
 					IsParticipant: false,
 				})
+			} else {
+				setData.User = append(setData.User, models.UserForRedis{
+					ID:            client.Protocol.User.ID,
+					Conn:          client.Client.Conn,
+					DisplayName:   client.Protocol.User.DisplayName,
+					Icon:          client.Protocol.User.Icon,
+					IsParticipant: true,
+				})
 			}
-			setData.User = append(setData.User, models.UserForRedis{
-				ID:            client.Protocol.User.ID,
-				Conn:          client.Client.Conn,
-				DisplayName:   client.Protocol.User.DisplayName,
-				Icon:          client.Protocol.User.Icon,
-				IsParticipant: true,
-			})
 			data, err := json.Marshal(setData)
 			if err != nil {
 				h.logger.Error(err)
