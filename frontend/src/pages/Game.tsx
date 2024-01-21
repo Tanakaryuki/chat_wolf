@@ -1,23 +1,25 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { Hamburger } from "../components/Hamburger/Hamburger";
 import { GameContainer } from "../containers/game";
 import ReconnectingWebSocket from "reconnecting-websocket";
-import { useGameStatusStore } from "../store";
+import { useGameStatusStore, useRefStore, useSchemaStore } from "../store";
 import { EventType } from "../schema/common";
 import { transferMessage } from "../libs/webSocket";
-import { Protocol } from "../schema/common";
+import { listener } from "../libs/listener";
+// import { Protocol } from "../schema/common";
 // const ReconnectingWebSocket = lazy(() => import("reconnecting-websocket"));
 
 const Game = () => {
-  const [message, setMessage] = useState<string>();
-  const [_schema, setSchema] = useState<Protocol>();
   const socketRef = useRef<ReconnectingWebSocket>();
+  const setRef = useRefStore((state) => state.setRef);
   const query = new URLSearchParams(location.search);
   const roomId = query.get("id");
   const eventype = query.get("type");
   //   const status = useGameStatusStore((state) => state.status);
   const setStatus = useGameStatusStore((state) => state.setStatus);
   const setRoomId = useGameStatusStore((state) => state.setRoomId);
+  const setSchema = useSchemaStore((state) => state.setSchema);
+  const schema = useSchemaStore((state) => state.schema);
 
   useEffect(() => {
     if (eventype === EventType.createRoom) {
@@ -35,13 +37,13 @@ const Game = () => {
       import.meta.env.VITE_WS_URL ?? "ws://localhost:8080/ws"
     );
     socketRef.current = websocket;
+    setRef(socketRef);
 
     const onMessage = (event: MessageEvent<string>) => {
       setSchema(transferMessage(event));
-      setMessage(event.data);
+      listener(schema);
     };
 
-    console.log(message);
     websocket.addEventListener("message", onMessage);
 
     return () => {
