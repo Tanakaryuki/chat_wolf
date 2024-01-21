@@ -274,14 +274,14 @@ func (h *Hub) Run() {
 			}
 			client.Protocol.Room.VoteEnded = true
 			for i := 0; i < len(setData.User); i++ {
-				if client.Protocol.User.ID == setData.User[i].ID {
+				if client.Protocol.User.Vote.ID == setData.User[i].ID {
 					setData.User[i].Vote = models.Vote{
 						ID:          client.Protocol.User.Vote.ID,
 						DisplayName: client.Protocol.User.Vote.DisplayName,
 					}
 
 				}
-				if setData.User[i].ID == "" {
+				if setData.User[i].Vote.ID == "" {
 					client.Protocol.Room.VoteEnded = false
 				}
 			}
