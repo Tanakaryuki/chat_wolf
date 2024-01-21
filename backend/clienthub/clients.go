@@ -67,7 +67,6 @@ func (c *Client) readPump(logger echo.Logger) {
 	c.Conn.SetReadDeadline(time.Now().Add(pongWait))
 	c.Conn.SetPongHandler(func(string) error { c.Conn.SetReadDeadline(time.Now().Add(pongWait)); return nil })
 	for {
-		logger.Error("hello, client: %v", c)
 		var message models.Protocol
 		err := c.Conn.ReadJSON(&message)
 		if err != nil {
@@ -85,7 +84,6 @@ func (c *Client) readPump(logger echo.Logger) {
 		logger.Error(cp)
 		switch message.EventType {
 		case models.CreateRoom:
-			logger.Error("Call Create Room")
 			c.Hub.createRoom <- cp
 		case models.EnterRoom:
 			c.Hub.enterRoom <- cp
@@ -96,8 +94,8 @@ func (c *Client) readPump(logger echo.Logger) {
 		case models.SetOption:
 		case models.StartGame:
 			c.Hub.startGame <- cp
-		case models.SendTime:
 		case models.AskQuestion:
+			c.Hub.askQuestion <- cp
 		case models.EndQandA:
 		case models.GiveAnswer:
 		case models.VoteEvent:
