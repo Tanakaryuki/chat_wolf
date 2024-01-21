@@ -3,6 +3,7 @@ import { PlayingContainer } from "./playing";
 import { WaitingContainer } from "./waiting";
 import { ResultContainer } from "./result";
 import { CreateRoom } from "./event/CreateRoom";
+import { EnterRoom } from "./event/EnterRoom";
 
 export const SwitchingHub = (eventType: EventType) => {
   switch (eventType) {
@@ -20,9 +21,9 @@ export const SwitchingHub = (eventType: EventType) => {
       );
     case EventType.createRoom:
       return (
-        <PlayingContainer>
+        <WaitingContainer>
           <CreateRoom />
-        </PlayingContainer>
+        </WaitingContainer>
       );
     case EventType.endQandA:
       return (
@@ -33,7 +34,7 @@ export const SwitchingHub = (eventType: EventType) => {
     case EventType.enterRoom:
       return (
         <WaitingContainer>
-          <></>
+          <EnterRoom />
         </WaitingContainer>
       );
     case EventType.exitRoom:

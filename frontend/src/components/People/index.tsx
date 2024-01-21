@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, Fragment } from "react";
 import { Participant } from "../../schema/status";
 import { Player } from "../Player";
 import styles from "./index.module.css";
@@ -21,18 +21,13 @@ export const People: FC<Props> = ({ participants }) => {
     <div className={styles.container}>
       {participants.map((e, i) => {
         return (
-          <>
+          <Fragment key={i}>
             {i < 6 && (
               <div className="">
-                <Player
-                  key={e.id}
-                  name={e.name}
-                  uuid={e.icon}
-                  color={colors[i]}
-                />
+                <Player name={e.name} uuid={e.icon} color={colors[i]} />
               </div>
             )}
-          </>
+          </Fragment>
         );
       })}
     </div>

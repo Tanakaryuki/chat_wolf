@@ -15,7 +15,7 @@ type Props = {
 export const WaitingContainer: FC<Props> = ({ children }) => {
   //   const participants = useParticipantsStore((state) => state.participants);
   const meta = useGameStatusStore((state) => state.meta);
-  const url = `${location.protocol}://${location.hostname}/game/?type=enter_room&id=${meta.roomId}`;
+  const url = `${location.protocol}://${location.hostname}:${location.port}/game/?type=enter_room&id=${meta.roomId}`;
   //   const addParticipant = useParticipantsStore((state) => state.addParticipant);
   //   useEffect(() => {
   //     addParticipant({

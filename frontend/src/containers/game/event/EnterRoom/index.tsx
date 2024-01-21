@@ -31,6 +31,7 @@ export const EnterRoom: FC = () => {
     };
     const dataString = commonSchemaToJSON(data);
     ref?.current?.send(dataString);
+    console.log("まじ？");
   }, []);
 
   return <div className={styles.container}></div>;
